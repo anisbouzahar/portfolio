@@ -1,0 +1,31 @@
+---
+import '@fontsource-variable/inter';
+
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+
+---
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Bouzahar Anis | Software Developer </title>
+		<meta name="description" content="I'm Bouzahar Anis, a software developer specializing in React, TypeScript, Go, and scalable web applications. Explore my projects and experience!">
+	</head>
+	<body class="ab:font-sans bg-background">
+		<slot />
+	<Footer/>
+	</body>
+</html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>

@@ -1,0 +1,31 @@
+---
+import '@fontsource-variable/inter';
+
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+import '@repo/ui/styles.css';
+const { class: className = '', children } = Astro.props;
+
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Bouzahar Anis | Software Developer </title>
+    <meta name="description" content="I'm Bouzahar Anis, a software developer specializing in React, TypeScript, Go, and scalable web applications. Explore my projects and experience!">
+    <script defer src="http://82.112.240.23:4100/script.js" data-website-id="ef13e458-e8b6-428d-9f27-fc9feaecc88a"/>
+</head>
+<body  class='bg-slate-950 '>
+<main  class={className}}>
+    <slot />
+</main>
+<Footer/>
+</body>
+</html>
+
+<style>
+
+</style>

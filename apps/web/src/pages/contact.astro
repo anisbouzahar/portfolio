@@ -1,0 +1,17 @@
+---
+
+import ComingSoonLayout from "../layouts/ComingSoonLayout.astro";
+import BlurryBlob from "../components/BlurryBlob";
+import {ContactForm} from "../components/ContactForm";
+---
+
+<ComingSoonLayout class="min-h-[calc(100svh-80px)] md:min-h-[calc(100svh-60px)]">
+    <div class="h-full" >
+        <BlurryBlob
+                firstBlobColor="bg-pink-300"
+                secondBlobColor="bg-cyan-300"
+        />
+        <ContactForm client:load/>
+    </div>
+
+</ComingSoonLayout>

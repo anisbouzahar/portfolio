@@ -1,0 +1,67 @@
+@import "tailwindcss" ;
+@plugin 'tailwindcss-animate';
+@plugin '@tailwindcss/typography';
+@config "../../tailwind.config.ts";
+
+@theme{
+    --font-sans:'Inter Variable', sans-serif;
+    --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    --font-sans--font-variation-settings: "opsz" 32;
+
+    --color-background: oklch(var(--background));
+    --color-foreground: oklch(var(--foreground));
+
+
+
+    --color-primary: oklch(var(--primary));
+    --color-primary-foreground: oklch(var(--primary-foreground));
+
+    --color-secondary: oklch(var(--secondary));
+    --color-secondary-foreground: oklch(var(--secondary-foreground));
+
+    --color-muted: oklch(var(--muted));
+    --color-muted-foreground: oklch(var(--muted-foreground));
+
+    --color-accent: oklch(var(--accent));
+    --color-accent-foreground: oklch(var(--accent-foreground));
+
+    --color-destructive: oklch(var(--destructive));
+    --color-destructive-foreground: oklch(var(--destructive-foreground));
+
+    --color-border: oklch(var(--border));
+    --color-input: oklch(var(--input));
+    --color-ring: oklch(var(--ring));
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+}
+
+
+@keyframes pop-blob {
+    0% {
+        transform: scale(1);
+    }
+    33% {
+        transform: scale(1.2);
+    }
+    66% {
+        transform: scale(0.8);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@layer utilities {
+    .animate-pop-blob {
+        animation: pop-blob 5s infinite;
+    }
+
+    .blur-20 {
+        filter: blur(20px);
+    }
+
+    .blur-25 {
+        filter: blur(25px);
+    }
+}

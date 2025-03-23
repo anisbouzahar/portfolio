@@ -1,0 +1,32 @@
+---
+import '@fontsource-variable/inter';
+
+import "../styles/global.css";
+import BlurryBlob from "../components/BlurryBlob";
+const { title } = Astro.props;
+---
+
+<html lang="en" class="scroll-smooth  bg-slate-950 ">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={title} />
+</head>
+<body class=" text-white  min-h-screen font-sans antialiased ">
+<BlurryBlob
+        firstBlobColor="bg-pink-300"
+        secondBlobColor="bg-cyan-300"
+/>
+<main class="relative z-10 px-6 py-16">
+    <div class="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl shadow-2xl max-w-3xl mx-auto p-8 prose prose-invert prose-headings:font-semibold prose-a:text-violet-400 hover:prose-a:underline prose-strong:text-white transition-all duration-300">
+        <h1 class="text-3xl font-bold tracking-tight mb-4">{title}</h1>
+        <slot/>
+    </div>
+</main>
+
+<footer class="text-center text-sm text-white/50 py-12">
+    © {new Date().getFullYear()} Bouzahar Anis — All rights reserved.
+</footer>
+</body>
+</html>

@@ -1,0 +1,22 @@
+FROM oven/bun:1.0
+
+# Create app directory
+WORKDIR /home/bun/app
+
+# Copy everything needed from monorepo
+COPY . .
+
+# Install dependencies using Bun
+RUN bun install
+
+# Build the app using Turborepo (if needed)
+RUN bunx turbo run build --filter=apps/api...
+
+# Change working directory to the payload app
+WORKDIR /home/bun/app/apps/payload
+
+# Expose the port
+EXPOSE 3000
+
+# Run the app
+CMD ["bun", "run", "dev"]

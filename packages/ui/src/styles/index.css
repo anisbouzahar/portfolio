@@ -1,0 +1,56 @@
+@layer ui {
+    :root {
+        --background: 1 0 0;
+        --foreground: 0.234 0.005 275.92;
+        --card: 1 0 0;
+        --card-foreground: 0.234 0.005 275.92;
+        --popover: 1 0 0;
+        --popover-foreground: 0.234 0.005 275.92;
+        --primary: 53.24% 0.2911 291.18;
+        --primary-foreground: 95.29% 0 292.24;
+        --secondary: 0.97 0.005 275.92;
+        --secondary-foreground: 0.196 0.017 275.92;
+        --muted: 0.97 0.005 275.92;
+        --muted-foreground: 0.589 0.008 275.92;
+        --accent: 0.97 0.005 275.92;
+        --accent-foreground: 0.196 0.017 275.92;
+        --destructive: 0.601 0.205 27.42;
+        --destructive-foreground: 0.98 0 0;
+        --border: 0.9 0.01 275.92;
+        --input: 0.9 0.01 275.92;
+        --ring: 30.49% 0.1465 332.47;
+        --chart-1: 0.727 0.180 47.49;
+        --chart-2: 0.583 0.112 182.67;
+        --chart-3: 0.391 0.073 219.17;
+        --chart-4: 0.792 0.191 88.85;
+        --chart-5: 0.801 0.230 58.66;
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        --background: 0.234 0.005 275.92;
+        --foreground: 0.98 0 0;
+        --card: 0.234 0.005 275.92;
+        --card-foreground: 0.98 0 0;
+        --popover: 0.234 0.005 275.92;
+        --popover-foreground: 0.98 0 0;
+        --primary: 0.98 0 0;
+        --primary-foreground: 0.196 0.017 275.92;
+        --secondary: 0.112 0.007 275.92;
+        --secondary-foreground: 0.98 0 0;
+        --muted: 0.112 0.007 275.92;
+        --muted-foreground: 0.674 0.015 275.92;
+        --accent: 0.112 0.007 275.92;
+        --accent-foreground: 0.98 0 0;
+        --destructive: 0.381 0.123 27.42;
+        --destructive-foreground: 0.98 0 0;
+        --border: 0.112 0.007 275.92;
+        --input: 0.112 0.007 275.92;
+        --ring: 0.861 0.016 275.92;
+        --chart-1: 0.5 0.210 265.61;
+        --chart-2: 0.452 0.152 160.42;
+        --chart-3: 0.617 0.184 57.37;
+        --chart-4: 0.656 0.202 317.83;
+        --chart-5: 0.605 0.225 20.76;
+    }
+}
