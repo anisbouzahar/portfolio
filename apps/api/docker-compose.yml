@@ -4,7 +4,7 @@ services:
   payload:
     image: oven/bun:1.0
     ports:
-      - '3000:3000'
+      - '8030:8030'
     volumes:
       - .:/home/bun/app
       - node_modules:/home/bun/app/node_modules
