@@ -21,7 +21,7 @@ export default function ComingSoon() {
                     variant="fade"
                     delay={0.05}
                     staggerDelay={0.02}
-                    className="mt-4 text-sm sm:text-base md:text-lg text-white max-w-md"
+                    className="mt-4 text-sm sm:text-base md:text-lg text-white max-w-md mx-2"
                 >
                     We’re putting the finishing touches on something great. Check back soon.
                 </TextReveal>
