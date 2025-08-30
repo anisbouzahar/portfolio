@@ -2,7 +2,7 @@ import { TextReveal } from "@/components/ui/text-reveal";
 
 export default function ComingSoon() {
     return (
-        <main className="min-h-screen w-full relative bg-black">
+        <main className="min-h-screen z-1 w-full relative bg-black">
             <div
                 className="absolute inset-0 z-0"
                 style={{

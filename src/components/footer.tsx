@@ -9,7 +9,7 @@ export default function Footer() {
 
                 <div className="flex gap-4">
                     <a
-                        href="hello@anis-bouzahar.dev"
+                        href="mailto:hello@anis-bouzahar.dev"
                         className="hover:text-white transition-colors"
                     >
                         Contact
