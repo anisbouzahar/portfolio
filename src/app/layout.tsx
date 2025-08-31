@@ -50,7 +50,7 @@ export default function RootLayout({
                                                            data-website-id="ded1a371-f068-42c1-a2a7-de75f6e0c029"
                                                            data-domains="anis-bouzahar.dev,www.anis-bouzahar.dev"
                                                            data-do-not-track="true"
-                                                           strategy="afterInteractive"/>)}
+                                                           strategy="lazyOnload"/>)}
         </body>
         </html>);
 }
