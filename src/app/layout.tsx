@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/footer";
+import Script from 'next/script'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +37,10 @@ export default function RootLayout({
       >
         {children}
       <Footer/>
-        <script defer src="https://analytics.anis-bouzahar.dev/script.js" data-website-id="ded1a371-f068-42c1-a2a7-de75f6e0c029"></script>
+        <Script src="https://analytics.anis-bouzahar.dev/script.js"
+                data-website-id="ded1a371-f068-42c1-a2a7-de75f6e0c029"
+                data-domains="anis-bouzahar.dev,www.anis-bouzahar.dev"
+                strategy="afterInteractive" />
       </body>
     </html>
   );
