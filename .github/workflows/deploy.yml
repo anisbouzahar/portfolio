@@ -47,7 +47,7 @@ jobs:
       - name: Deploy container
         run: |
           mkdir -p ~/anis.bouzahar.com
-          cp Dockerfile docker-compose.yml ~/anis.bouzahar.com/
+          cp Dockerfile docker-compose.yml nginx.conf ~/anis.bouzahar.com/
           rm -rf ~/anis.bouzahar.com/dist
           cp -r dist ~/anis.bouzahar.com/
           cd ~/anis.bouzahar.com
