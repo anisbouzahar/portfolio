@@ -66,6 +66,19 @@ const today = new Date();
                 >Terms of Service</a
               >
             </li>
+            <li>
+              <a
+                href={import.meta.env.PUBLIC_STATUS_PAGE_URL}
+                target="_blank"
+                class="hover:text-slate-900 dark:hover:text-white transition-colors inline-flex items-center gap-2"
+                id="status-link"
+                >Services Status
+                <span class="relative flex h-2 w-2" id="status-dot">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75 status-ping"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-slate-500 status-core"></span>
+                </span>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -151,3 +164,41 @@ C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"
     </div>
   </div>
 </footer>
+
+<script>
+  async function updateStatus() {
+    try {
+      const apiUrl = import.meta.env.PUBLIC_STATUS_API_URL;
+      const response = await fetch(apiUrl);
+      const text = await response.text();
+      
+      const ping = document.querySelector('#status-dot .status-ping');
+      const core = document.querySelector('#status-dot .status-core');
+      
+      if (ping && core) {
+        // Reset classes
+        ping.className = 'animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 status-ping';
+        core.className = 'relative inline-flex rounded-full h-2 w-2 status-core';
+        
+        if (text.includes('>Up<')) {
+          ping.classList.add('bg-emerald-400');
+          core.classList.add('bg-emerald-500');
+        } else if (text.includes('>Down<')) {
+          ping.classList.add('bg-red-400');
+          core.classList.add('bg-red-500');
+        } else {
+          ping.classList.add('bg-yellow-400');
+          core.classList.add('bg-yellow-500');
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch status:', error);
+    }
+  }
+
+  // Run on initial load
+  updateStatus();
+  
+  // Optionally update every 60 seconds
+  setInterval(updateStatus, 60000);
+</script>
