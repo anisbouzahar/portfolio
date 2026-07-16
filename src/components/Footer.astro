@@ -2,9 +2,7 @@
 const today = new Date();
 ---
 
-<footer
-  class="mt-16 bg-white/50 dark:bg-slate-950/50"
->
+<footer class="mt-16 bg-white/50 dark:bg-slate-950/50">
   <div class="max-w-7xl px-4 md:px-8 py-12 mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
       <!-- Left: Brand & Tagline -->
@@ -74,8 +72,12 @@ const today = new Date();
                 id="status-link"
                 >Services Status
                 <span class="relative flex h-2 w-2" id="status-dot">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75 status-ping"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-slate-500 status-core"></span>
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75 status-ping"
+                  ></span>
+                  <span
+                    class="relative inline-flex rounded-full h-2 w-2 bg-slate-500 status-core"
+                  ></span>
                 </span>
               </a>
             </li>
@@ -170,35 +172,49 @@ C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"
     try {
       const apiUrl = import.meta.env.PUBLIC_STATUS_API_URL;
       const response = await fetch(apiUrl);
-      const text = await response.text();
-      
-      const ping = document.querySelector('#status-dot .status-ping');
-      const core = document.querySelector('#status-dot .status-core');
-      
+      const data = await response.json();
+
+      const ping = document.querySelector("#status-dot .status-ping");
+      const core = document.querySelector("#status-dot .status-core");
+
+      let overallStatus = "up";
+
+      for (const deviceId in data.heartbeatList) {
+        const entries = data.heartbeatList[deviceId];
+        if (!entries || entries.length === 0) continue;
+
+        const lastEntry = entries[entries.length - 1];
+
+        if (lastEntry.status === 0) {
+          overallStatus = "down";
+          break;
+        } else if (lastEntry.status === 2 || lastEntry.status === 3) {
+          overallStatus = "degraded";
+        }
+      }
+
       if (ping && core) {
-        // Reset classes
-        ping.className = 'animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 status-ping';
-        core.className = 'relative inline-flex rounded-full h-2 w-2 status-core';
-        
-        if (text.includes('>Up<')) {
-          ping.classList.add('bg-emerald-400');
-          core.classList.add('bg-emerald-500');
-        } else if (text.includes('>Down<')) {
-          ping.classList.add('bg-red-400');
-          core.classList.add('bg-red-500');
+        ping.className =
+          "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 status-ping";
+        core.className =
+          "relative inline-flex rounded-full h-2 w-2 status-core";
+
+        if (overallStatus === "up") {
+          ping.classList.add("bg-emerald-400");
+          core.classList.add("bg-emerald-500");
+        } else if (overallStatus === "down") {
+          ping.classList.add("bg-red-400");
+          core.classList.add("bg-red-500");
         } else {
-          ping.classList.add('bg-yellow-400');
-          core.classList.add('bg-yellow-500');
+          ping.classList.add("bg-yellow-400");
+          core.classList.add("bg-yellow-500");
         }
       }
     } catch (error) {
-      console.error('Failed to fetch status:', error);
+      console.error("Failed to fetch status:", error);
     }
   }
 
-  // Run on initial load
   updateStatus();
-  
-  // Optionally update every 60 seconds
   setInterval(updateStatus, 60000);
 </script>

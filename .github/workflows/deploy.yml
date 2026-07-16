@@ -25,6 +25,8 @@ jobs:
 
       - name: Build project
         run: pnpm run build
+        env:
+          PUBLIC_STATUS_API_URL: ${{ vars.PUBLIC_STATUS_API_URL }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -37,13 +39,13 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: build-output
           path: dist/
-          
+
       - name: Deploy container
         run: |
           mkdir -p ~/anis.bouzahar.com
