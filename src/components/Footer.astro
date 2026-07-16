@@ -171,7 +171,15 @@ C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"
   async function updateStatus() {
     try {
       const apiUrl = import.meta.env.PUBLIC_STATUS_API_URL;
+      if (!apiUrl || apiUrl === 'undefined') {
+        console.warn('PUBLIC_STATUS_API_URL is not set. Live status will not be fetched.');
+        return;
+      }
+      
       const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
 
       const ping = document.querySelector("#status-dot .status-ping");
