@@ -1,6 +1,27 @@
 ---
 import logo from "../assets/logo.svg";
 import ThemeToggle from "./ThemeToggle.astro";
+
+const pathname = Astro.url.pathname;
+const isCurrent = (path: string) => {
+  if (path === '/' && pathname === '/') return true;
+  if (path !== '/' && pathname.startsWith(path)) return true;
+  return false;
+};
+
+const getLinkClass = (path: string) => {
+  const base = "nav-link inline-block px-5 py-2 text-base rounded-full transition-colors duration-200";
+  const active = "text-slate-900 dark:text-white font-semibold";
+  const inactive = "text-slate-700 dark:text-slate-200 font-medium hover:text-slate-900 dark:hover:text-white";
+  return `${base} ${isCurrent(path) ? active : inactive}`;
+};
+
+const getMobileLinkClass = (path: string) => {
+  const base = "text-3xl transition-colors";
+  const active = "text-accent dark:text-accent font-bold";
+  const inactive = "text-slate-800 dark:text-slate-200 font-medium hover:text-slate-900 dark:hover:text-white";
+  return `${base} ${isCurrent(path) ? active : inactive}`;
+};
 ---
 
 <div class="w-full fixed h-40 top-0 z-[21] pointer-events-none">
@@ -61,32 +82,16 @@ import ThemeToggle from "./ThemeToggle.astro";
           </div>
 
           <li class="relative z-10">
-            <a
-              href="/work"
-              class="nav-link inline-block px-5 py-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors duration-200"
-              >Work</a
-            >
+            <a href="/work" class={getLinkClass('/work')}>Work</a>
           </li>
           <li class="relative z-10">
-            <a
-              href="/services"
-              class="nav-link inline-block px-5 py-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors duration-200"
-              >Services</a
-            >
+            <a href="/services" class={getLinkClass('/services')}>Services</a>
           </li>
           <li class="relative z-10">
-            <a
-              href="/blog"
-              class="nav-link inline-block px-5 py-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors duration-200"
-              >Blog</a
-            >
+            <a href="/blog" class={getLinkClass('/blog')}>Blog</a>
           </li>
           <li class="relative z-10">
-            <a
-              href="/about"
-              class="nav-link inline-block px-5 py-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors duration-200"
-              >About</a
-            >
+            <a href="/about" class={getLinkClass('/about')}>About</a>
           </li>
         </ul>
       </nav>
@@ -106,16 +111,29 @@ import ThemeToggle from "./ThemeToggle.astro";
         </a>
 
         <button
-          class="flex lg:hidden flex-col justify-center items-center gap-1 w-12 h-12 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-full shadow-sm border border-gray-200/50 dark:border-gray-800/50"
+          id="mobile-menu-btn"
+          class="flex lg:hidden flex-col justify-center items-center gap-1.5 w-12 h-12 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-full shadow-sm border border-gray-200/50 dark:border-gray-800/50 pointer-events-auto"
+          aria-label="Toggle mobile menu"
         >
-          <div class="w-4 h-0.5 bg-slate-900 dark:bg-white rounded"></div>
-          <div class="w-4 h-0.5 bg-slate-900 dark:bg-white rounded"></div>
-          <div class="w-4 h-0.5 bg-slate-900 dark:bg-white rounded"></div>
+          <div id="line-1" class="w-5 h-0.5 bg-slate-900 dark:bg-white rounded transition-transform duration-300 origin-center"></div>
+          <div id="line-2" class="w-5 h-0.5 bg-slate-900 dark:bg-white rounded transition-opacity duration-300"></div>
+          <div id="line-3" class="w-5 h-0.5 bg-slate-900 dark:bg-white rounded transition-transform duration-300 origin-center"></div>
         </button>
       </div>
     </div>
   </div>
 </header>
+
+<!-- Mobile Menu Overlay -->
+<div id="mobile-menu" class="fixed inset-0 z-[40] bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl translate-x-full transition-transform duration-500 ease-in-out flex flex-col justify-center items-center pointer-events-auto lg:hidden">
+  <nav class="flex flex-col items-center gap-8">
+    <a href="/work" class={getMobileLinkClass('/work')}>Work</a>
+    <a href="/services" class={getMobileLinkClass('/services')}>Services</a>
+    <a href="/blog" class={getMobileLinkClass('/blog')}>Blog</a>
+    <a href="/about" class={getMobileLinkClass('/about')}>About</a>
+    <a href="/contact" class="mt-4 px-8 py-3 rounded-full bg-accent text-white text-xl font-medium hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20">Start project</a>
+  </nav>
+</div>
 
 <script>
   function initNavPill() {
@@ -161,9 +179,59 @@ import ThemeToggle from "./ThemeToggle.astro";
     });
   }
 
+  function initMobileMenu() {
+    const btn = document.getElementById("mobile-menu-btn");
+    const menu = document.getElementById("mobile-menu");
+    const line1 = document.getElementById("line-1");
+    const line2 = document.getElementById("line-2");
+    const line3 = document.getElementById("line-3");
+    let isOpen = false;
+
+    if (!btn || !menu || !line1 || !line2 || !line3) return;
+
+    // Reset state in case of view transitions
+    menu.classList.add("translate-x-full");
+    menu.classList.remove("translate-x-0");
+    line1.style.transform = "none";
+    line2.style.opacity = "1";
+    line3.style.transform = "none";
+    document.body.style.overflow = "";
+
+    const toggleMenu = () => {
+      isOpen = !isOpen;
+      if (isOpen) {
+        menu.classList.remove("translate-x-full");
+        menu.classList.add("translate-x-0");
+        line1.style.transform = "translateY(8px) rotate(45deg)";
+        line2.style.opacity = "0";
+        line3.style.transform = "translateY(-8px) rotate(-45deg)";
+        document.body.style.overflow = "hidden";
+      } else {
+        menu.classList.remove("translate-x-0");
+        menu.classList.add("translate-x-full");
+        line1.style.transform = "none";
+        line2.style.opacity = "1";
+        line3.style.transform = "none";
+        document.body.style.overflow = "";
+      }
+    };
+
+    btn.onclick = toggleMenu;
+
+    menu.querySelectorAll("a").forEach((link) => {
+      link.onclick = () => {
+        if (isOpen) toggleMenu();
+      };
+    });
+  }
+
   // Initialize on page load
   initNavPill();
+  initMobileMenu();
 
   // Re-initialize after view transitions (if Astro View Transitions are used)
-  document.addEventListener("astro:page-load", initNavPill);
+  document.addEventListener("astro:page-load", () => {
+    initNavPill();
+    initMobileMenu();
+  });
 </script>
