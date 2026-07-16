@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: Prod
     steps:
       - uses: actions/checkout@v4
 
@@ -36,6 +37,7 @@ jobs:
           path: dist/
 
   deploy:
+    environment: Prod
     runs-on: self-hosted
     needs: build
     steps:
