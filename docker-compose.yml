@@ -1,0 +1,17 @@
+services:
+  anis-portfolio:
+    build: .
+    container_name: anis-portfolio
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.anis-portfolio.rule=Host(`anis.bouzahar.com`)"
+      - "traefik.http.routers.anis-portfolio.entrypoints=websecure"
+      - "traefik.http.routers.anis-portfolio.tls.certresolver=cloudflare"
+      - "traefik.http.services.anis-portfolio.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true
