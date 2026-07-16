@@ -1,63 +1,318 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import Layout from '../layouts/Layout.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import aboutData from '../data/about.json';
+
+const { milestones, page, philosophy, origin } = aboutData;
 ---
 
-<Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
-	heroImage={AboutHeroImage}
->
-	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
-	</p>
+<Layout title={`About | ${SITE_TITLE}`} description={SITE_DESCRIPTION} bodyClass="relative">
+	<Fragment slot="background">
+		<div id="bg-wrapper" class="absolute top-0 left-0 w-full h-[100dvh] -z-10 pointer-events-none will-change-transform">
+			<!-- Fixed Three.js Background (now translated absolutely) -->
+			<canvas id="about-canvas" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
+			
+			<!-- Gradient Fades for Header/Footer visibility -->
+			<div class="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-white via-white/80 to-transparent dark:from-slate-950 dark:via-slate-950/80"></div>
+			<div class="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-slate-950 dark:via-slate-950/80"></div>
+		</div>
+	</Fragment>
+		
 
-	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
-	</p>
+		<main class="relative z-10 w-full max-w-5xl mx-auto px-6 py-32 md:py-48 overflow-x-hidden">
+			
+			<!-- Hero Section -->
+			<div class="mb-32 md:mb-48 text-center animate-fade-in-up">
+				<h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-white">{page.title}</h1>
+				<p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+					{page.description}
+				</p>
+			</div>
 
-	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
-	</p>
 
-	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
+			<!-- Origin Story Section -->
+			<section class="mb-32 md:mb-48">
+				<div class="max-w-3xl mx-auto">
+					<div class="text-center mb-16 section-reveal">
+						<h2 class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">{origin.heading}</h2>
+						<div class="w-16 h-1 bg-accent mx-auto rounded-full opacity-50"></div>
+					</div>
+					<div class="space-y-8 text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+						{origin.paragraphs.map((p: string) => (
+							<p class="section-reveal">{p}</p>
+						))}
+					</div>
+				</div>
+			</section>
 
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
-	</p>
+			<!-- Timeline Header -->
+			<div class="text-center mb-24 section-reveal">
+				<h2 class="text-4xl font-bold text-slate-900 dark:text-white">The Career Timeline</h2>
+				<div class="w-24 h-1 bg-accent mx-auto mt-6 rounded-full opacity-50"></div>
+			</div>
+
+			<!-- Timeline Container -->
+			<div class="relative" id="timeline-container">
+				<!-- Vertical timeline line -->
+				<div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-gray-200 dark:bg-gray-800 transform md:-translate-x-1/2 rounded-full"></div>
+				<!-- Vertical timeline progress line -->
+				<div id="timeline-progress" class="absolute left-4 md:left-1/2 top-0 w-[2px] bg-accent transform md:-translate-x-1/2 rounded-full z-0 transition-all duration-150 ease-out" style="height: 0%;">
+					<!-- Premium Pulsing Head -->
+					<div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 flex items-center justify-center">
+						<div class="absolute w-4 h-4 bg-accent rounded-full animate-ping opacity-60"></div>
+						<div class="w-2 h-2 bg-white rotate-45 shadow-[0_0_12px_2px_rgba(192,132,252,1)] rounded-sm z-10"></div>
+					</div>
+				</div>
+
+				<div class="space-y-16 md:space-y-24">
+					{milestones.map((milestone, index) => {
+						const isEven = index % 2 === 0;
+						return (
+							<Fragment>
+								<div class={`relative flex flex-col md:flex-row items-center justify-between group`}>
+								<!-- Timeline Dot (Glows on hover & scroll active) -->
+								<div class="timeline-dot absolute left-4 md:left-1/2 w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-accent group-hover:scale-125 transform -translate-x-[7px] md:-translate-x-1/2 mt-8 md:mt-0 shadow-sm group-hover:shadow-[0_0_20px_rgba(192,132,252,0.8)] z-10 transition-all duration-300"></div>
+								
+								<!-- Left Side (Content or Year) -->
+								<div class={`w-full md:w-[45%] pl-12 md:pl-0 section-reveal flex ${isEven ? 'md:justify-end' : 'hidden md:flex md:justify-start'}`}>
+									{isEven ? (
+										<div class="bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-gray-100 dark:border-gray-800 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-shadow hover:border-accent/30 w-full">
+											<div class="md:hidden text-accent font-mono font-bold text-xl mb-2">{milestone.year}</div>
+											<h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{milestone.title}</h3>
+											<p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+												{milestone.description}
+											</p>
+											<div class="flex flex-wrap gap-2">
+												{milestone.skills?.map((skill: string) => (
+													<span class="px-3 py-1 text-xs font-medium text-accent bg-accent/10 dark:bg-accent/20 rounded-full border border-accent/20">
+														{skill}
+													</span>
+												))}
+											</div>
+										</div>
+									) : (
+										<div class="hidden md:flex items-center text-accent font-mono font-bold text-4xl opacity-40 group-hover:opacity-100 group-hover:-translate-x-2 transition-all duration-300">
+											{milestone.year}
+										</div>
+									)}
+								</div>
+								
+								<!-- Right Side (Year or Content) -->
+								<div class={`w-full md:w-[45%] pl-12 md:pl-0 section-reveal flex ${!isEven ? 'md:justify-start' : 'hidden md:flex md:justify-end'}`}>
+									{!isEven ? (
+										<div class="bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-gray-100 dark:border-gray-800 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-shadow hover:border-accent/30 w-full">
+											<h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{milestone.title}</h3>
+											<p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+												{milestone.description}
+											</p>
+											<div class="flex flex-wrap gap-2">
+												{milestone.skills?.map((skill: string) => (
+													<span class="px-3 py-1 text-xs font-medium text-accent bg-accent/10 dark:bg-accent/20 rounded-full border border-accent/20">
+														{skill}
+													</span>
+												))}
+											</div>
+										</div>
+									) : (
+										<div class="hidden md:flex items-center text-accent font-mono font-bold text-4xl opacity-40 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300">
+											{milestone.year}
+										</div>
+									)}
+								</div>
+							</div>
+							
+							{milestone.transitionText && (
+								<div class="relative py-12 flex justify-center section-reveal z-10">
+									<div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl px-8 py-6 rounded-3xl max-w-2xl text-center border border-accent/20 shadow-xl">
+										<p class="text-lg md:text-xl italic text-slate-800 dark:text-slate-200 font-medium leading-relaxed">
+											{milestone.transitionText}
+										</p>
+									</div>
+								</div>
+							)}
+							</Fragment>
+						);
+					})}
+				</div>
+			</div>
+
+			<!-- Philosophy Section -->
+			<section class="mt-32 md:mt-48 mb-16 section-reveal border-t border-gray-200 dark:border-gray-800 pt-32">
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-start">
+					<div class="md:sticky md:top-32">
+						<h2 class="text-sm font-bold tracking-widest text-accent uppercase mb-6">{philosophy.heading}</h2>
+						<p class="text-4xl md:text-4xl font-extrabold text-slate-900 dark:text-white leading-tight italic tracking-tight">
+							{philosophy.quote}
+						</p>
+					</div>
+					<div class="space-y-8 text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+						{philosophy.paragraphs.map((p: string) => (
+							<p>{p}</p>
+						))}
+					</div>
+				</div>
+			</section>
+		</main>
 </Layout>
+
+<script>
+	import { Scene, Color, FogExp2, PerspectiveCamera, WebGLRenderer, TorusKnotGeometry, MeshBasicMaterial, Mesh } from 'three';
+	
+	const initAboutCanvas = () => {
+		const canvas = document.getElementById('about-canvas') as HTMLCanvasElement;
+		// @ts-ignore
+		if (!canvas || window.aboutRenderer) return;
+
+		let width = window.innerWidth;
+		let height = window.innerHeight;
+		
+		const scene = new Scene();
+		const isDark = document.documentElement.classList.contains('dark');
+		
+		const bgColor = isDark ? 0x020617 : 0xffffff;
+		scene.background = new Color(bgColor);
+		scene.fog = new FogExp2(bgColor, 0.015);
+		
+		const camera = new PerspectiveCamera(60, width / height, 0.1, 1000);
+		camera.position.set(0, 0, 30);
+		
+		const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
+		renderer.setSize(width, height);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		// @ts-ignore
+		window.aboutRenderer = renderer;
+
+		// --- COMPLEX POLYGON ---
+		const geometry = new TorusKnotGeometry(10, 3, 128, 16);
+		const material = new MeshBasicMaterial({ 
+			color: isDark ? 0xc084fc : 0x000000, 
+			wireframe: true,
+			transparent: true,
+			opacity: 0.15
+		});
+
+		const torusKnot = new Mesh(geometry, material);
+		scene.add(torusKnot);
+
+		// Handle Theme Toggling
+		const observer = new MutationObserver((mutations) => {
+			mutations.forEach((mutation) => {
+				if (mutation.attributeName === 'class') {
+					const currentlyDark = document.documentElement.classList.contains('dark');
+					const newBgColor = currentlyDark ? 0x020617 : 0xffffff;
+					const newMeshColor = currentlyDark ? 0xc084fc : 0x000000;
+					
+					scene.background.setHex(newBgColor);
+					scene.fog.color.setHex(newBgColor);
+					material.color.setHex(newMeshColor);
+				}
+			});
+		});
+		observer.observe(document.documentElement, { attributes: true });
+
+		// Animation Loop driven by Scroll
+		let currentScrollY = window.scrollY;
+		const bgWrapper = document.getElementById('bg-wrapper');
+		
+		const animate = () => {
+			requestAnimationFrame(animate);
+			
+			// Keep background wrapper fixed to viewport by translating it with scroll
+			if (bgWrapper) {
+				bgWrapper.style.transform = `translateY(${window.scrollY}px)`;
+			}
+			
+			// Smooth interpolation for scroll value
+			currentScrollY += (window.scrollY - currentScrollY) * 0.1;
+			
+			// Base rotation + scroll-driven rotation
+			torusKnot.rotation.x = currentScrollY * 0.002 + 0.5;
+			torusKnot.rotation.y = currentScrollY * 0.003;
+			
+			// Subtle pulsing effect
+			const time = Date.now() * 0.001;
+			const scale = 1 + Math.sin(time) * 0.05;
+			torusKnot.scale.set(scale, scale, scale);
+
+			renderer.render(scene, camera);
+		};
+
+		animate();
+
+		// Handle Resize
+		const onWindowResize = () => {
+			width = window.innerWidth;
+			height = window.innerHeight;
+			camera.aspect = width / height;
+			camera.updateProjectionMatrix();
+			renderer.setSize(width, height);
+		};
+		window.addEventListener('resize', onWindowResize);
+		
+		// Setup reveal animations
+		const revealElements = document.querySelectorAll('.section-reveal');
+		const revealObserver = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('animate-fade-in-up');
+					entry.target.style.opacity = '1';
+				}
+			});
+		}, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+		
+		revealElements.forEach(el => {
+			// @ts-ignore
+			el.style.opacity = '0'; // initially hidden
+			revealObserver.observe(el);
+		});
+		
+		// Timeline progress line
+		const timelineContainer = document.getElementById('timeline-container');
+		const timelineProgress = document.getElementById('timeline-progress');
+		
+		const updateTimelineProgress = () => {
+			if (!timelineContainer || !timelineProgress) return;
+			const rect = timelineContainer.getBoundingClientRect();
+			const windowHeight = window.innerHeight;
+			
+			// Start filling when the top of the container reaches the middle of the screen
+			// End filling when the bottom of the container reaches the middle of the screen
+			const startPos = windowHeight / 2;
+			const scrollDistance = startPos - rect.top;
+			
+			if (scrollDistance < 0) {
+				timelineProgress.style.height = '0%';
+			} else {
+				const percentage = Math.min(100, Math.max(0, (scrollDistance / rect.height) * 100));
+				timelineProgress.style.height = `${percentage}%`;
+			}
+			
+			// Light up dots as the glowing head reaches them
+			const dots = document.querySelectorAll('.timeline-dot');
+			dots.forEach(dot => {
+				const dotRect = dot.getBoundingClientRect();
+				// If the dot crosses above the head position (startPos), activate it
+				if (dotRect.top <= startPos + 10) {
+					dot.classList.add('bg-accent', 'scale-125', 'shadow-[0_0_20px_rgba(192,132,252,0.8)]');
+					dot.classList.remove('bg-slate-300', 'dark:bg-slate-700');
+				} else {
+					dot.classList.remove('bg-accent', 'scale-125', 'shadow-[0_0_20px_rgba(192,132,252,0.8)]');
+					dot.classList.add('bg-slate-300', 'dark:bg-slate-700');
+				}
+			});
+		};
+		window.addEventListener('scroll', updateTimelineProgress, { passive: true });
+		updateTimelineProgress(); // Run once on load
+		
+		// Cleanup on Astro view transition
+		document.addEventListener('astro:before-swap', () => {
+			window.removeEventListener('resize', onWindowResize);
+			window.removeEventListener('scroll', updateTimelineProgress);
+			observer.disconnect();
+			revealObserver.disconnect();
+		}, { once: true });
+	};
+
+	initAboutCanvas();
+	document.addEventListener('astro:page-load', initAboutCanvas);
+</script>

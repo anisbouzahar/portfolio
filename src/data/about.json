@@ -1,0 +1,90 @@
+{
+  "preview": {
+    "subtitle": "Who I Am",
+    "title": "A bit about me.",
+    "paragraph": "I’m Anis, a product-minded engineer who loves bridging the gap between beautiful design and robust architecture. Over the last few years, I’ve specialized in building high-performance web applications, always prioritizing a seamless user experience over purely technical flexes. My strength lies in taking complex, ambiguous problems and distilling them into clean, maintainable systems that actually drive value. Right now, I'm deeply interested in the intersection of modern frontend frameworks and intelligent, interactive interfaces. I'm looking for my next challenge—opportunities where I can take true ownership of a product's lifecycle, push the boundaries of web performance, and collaborate with teams that care just as much about the tiny UX details as they do about the code quality.",
+    "ctaText": "Read the full story"
+  },
+  "page": {
+    "title": "My Story",
+    "description": "I believe curiosity is the real starting point of every good engineer. This is the story of how mine began."
+  },
+  "philosophy": {
+    "heading": "Engineering with Empathy",
+    "quote": "\"Code is cheap. User experience is everything.\"",
+    "paragraphs": [
+      "I've always viewed software engineering as a craft rather than just a technical discipline. For me, writing code is the easy part; the real challenge lies in deeply understanding the human on the other side of the screen.",
+      "It's the subtle decisions—the ones no user will ever consciously notice—that separate a good product from a great one. A button that's five pixels closer to where your thumb naturally rests. A loading state that reassures instead of frustrates. An error message that guides rather than blames. None of these will show up in a feature list or a sprint demo, yet they're exactly what determines whether someone trusts your product or quietly abandons it.",
+      "This is the paradox of great craftsmanship: the better the work, the less visible it becomes. When an interface truly works, users don't marvel at the design—they simply accomplish what they came to do and move on, unaware of the dozens of micro-decisions that made that moment feel effortless. That invisibility isn't an accident; it's the reward for obsessing over details most people will never consciously register."
+    ]
+  },
+  "origin": {
+    "heading": "How It All Started",
+    "paragraphs": [
+      "It all started with a floppy disk—and a shortcut I didn't understand.",
+      "Around 2000, on a chunky Windows 98 machine, I wanted nothing more than to play Age of Empires on a different computer than the one it was installed on. Simple enough, I thought. I found the little icon on the desktop, dragged it onto a floppy disk, walked it over to the other machine, and double-clicked, waiting for the familiar loading screen to appear.",
+      "Nothing happened.",
+      "That single moment of confusion cracked something open in me. I didn't just want to know why it didn't work—I needed to know. What even was a shortcut, if not the game itself? What was a file? What was software, actually, underneath the icons and windows? And what, at the most basic level, was a computer? One broken assumption turned into an avalanche of questions, and I started digging—not because anyone asked me to, but because I couldn't stop pulling at the thread.",
+      "By the time I reached high school, I'd quietly absorbed a working mental model of how computers actually functioned—hardware, software, the invisible plumbing connecting them—while most of my classmates were still just using their computers, blissfully unaware of what happened beneath the surface. It wasn't something I bragged about; it just felt like I'd stumbled onto a secret language everyone else had skipped the lesson for.",
+      "Then, in my final year of high school, computer science became an actual subject. I built my first real program: a command-line calculator, written in Pascal, running in a plain black terminal window. No graphics, no polish—just input, logic, output.",
+      "It felt like magic.",
+      "I remember typing numbers into that terminal and watching it respond exactly as I'd instructed—not by luck, not by guesswork, but because I had told it, precisely, what to do. For the first time, I understood what it meant to build something from nothing but logic and syntax. I felt, in the smallest and most literal sense, godlike.",
+      "That was the moment the direction of my life quietly locked into place. Not the floppy disk. Not the failed shortcut. The calculator. That was when curiosity turned into a decision: I wanted to build things. I wanted to solve problems. I wanted to spend my life in that space between confusion and clarity—the same space a broken shortcut had first dragged me into, all those years ago.",
+      "That decision didn't stay theoretical for long. Over the next several years, it carried me from student projects into real systems—each role adding a new layer to the same original obsession: understanding how things work, and making them work better, alongside teams who taught me that no complex system gets built alone."
+    ]
+  },
+  "milestones": [
+    {
+      "year": "2017 - 2018",
+      "title": "European Space Agency",
+      "description": "My professional journey truly kicked off at the European Space Agency, where I worked alongside data engineers and mission specialists to build intuitive Vue.js dashboards for monitoring IoT devices and railway sensors. I also partnered with the operations team to engineer a custom tracking tool for forest operations using Python and Electron. It was a fascinating deep dive into processing critical, real-time data from connected objects.",
+      "skills": ["Vue.js", "Python", "Google Cloud", "IoT", "Electron"],
+      "transitionText": "From there, I moved into the fast-paced rhythm of startup life—trading long institutional timelines for tighter feedback loops and faster iteration."
+    },
+    {
+      "year": "2018 - 2019",
+      "title": "Digital Butterfly",
+      "description": "Moving into the fast-paced startup world, I collaborated closely with our product and design teams to build a responsive B2B marketplace using React. Working with DevOps, I helped automate our CI/CD pipelines, cutting deployment times by 80% and drastically boosting our Google Lighthouse scores. Alongside the backend team, I also designed the database schemas and built a fast search API using Elasticsearch.",
+      "skills": ["React", "Elasticsearch", "Node.js", "CI/CD", "PostgreSQL"],
+      "transitionText": "That performance-first mindset followed me into my next role, where the stakes shifted from marketplace conversions to real-time user engagement."
+    },
+    {
+      "year": "2020",
+      "title": "Be4Bet",
+      "description": "I joined Be4Bet to help level up their sports betting platform, working closely with product managers to introduce an event-driven architecture. Together with the frontend and backend teams, I built a gamification system that completely transformed user engagement and retention, and we developed internal tools to monitor these live challenges, ensuring users always had access to real-time match statistics through a robust REST API.",
+      "skills": [
+        "Event-Driven Arch",
+        "REST API",
+        "Microservices",
+        "Gamification"
+      ],
+      "transitionText": "From gamifying live sports data, I found myself on an entirely different scale: making sense of massive industrial datasets for one of the world's largest manufacturers."
+    },
+    {
+      "year": "2021 - 2022",
+      "title": "Volkswagen",
+      "description": "I developed the search capabilities using Elasticsearch, designing and implementing query algorithms capable of handling multiple search parameters across large datasets to enable fast, accurate data retrieval. I also implemented the application's user interface in React, focusing on an efficient, responsive design that supports advanced search functionality and data visualization.",
+      "skills": ["React", "Elasticsearch", "Big Data", "Data Visualization"],
+      "transitionText": "That experience sharpened my appreciation for domains where precision isn't optional—which is exactly what led me into pharmaceuticals next."
+    },
+    {
+      "year": "2022 - 2024",
+      "title": "Sanofi",
+      "description": "Pivoting to the pharmaceutical industry, I worked with quality engineers and compliance teams to build a dynamic statistical process control dashboard using Vue.js, TypeScript, and Plotly. Together, we integrated Nelson rules for automated anomaly detection and developed custom compliance limits tailored to strict regulations. To streamline operations, I partnered with the ops team to build automated reporting pipelines using AWS Lambda and Puppeteer.",
+      "skills": ["Vue.js", "TypeScript", "AWS Lambda", "Puppeteer", "Plotly"],
+      "transitionText": "Today, that same instinct for turning complexity into clarity has brought me to my most ambitious challenge yet: putting powerful tools directly into the hands of people who've never written a line of code."
+    },
+    {
+      "year": "2024 - Present",
+      "title": "DGFIP",
+      "description": "Currently, I'm leading the architecture of a visual page builder (similar to Webflow) for the French public administration (DGFIP), working closely with design, compliance, and accessibility teams to deeply integrate the official government design system (DSFR). Together, we're empowering non-technical teams to visually construct accessible, compliant, and responsive web applications with drag-and-drop ease—bridging the gap between rigorous government standards and modern, fluid user experiences.",
+      "skills": [
+        "Visual Page Builder",
+        "DSFR",
+        "Accessibility",
+        "Vue/Nuxt",
+        "Drag-and-Drop"
+      ]
+    }
+  ]
+}

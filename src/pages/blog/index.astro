@@ -1,107 +1,60 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
+import Layout from '../../layouts/Layout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+).map(post => {
+	const words = post.body ? post.body.trim().split(/\s+/).length : 0;
+	const readTime = Math.max(1, Math.ceil(words / 200)) + ' min read';
+	return { ...post, readTime };
+});
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
+<Layout title={SITE_TITLE} description={SITE_DESCRIPTION} bodyClass="flex flex-col min-h-screen">
+		<main class="flex-grow w-full max-w-6xl px-6 py-10 pt-32 mx-auto md:py-16 md:pt-40">
+			<section class="mb-16 animate-fade-in-up">
+				<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-slate-900 dark:text-white">
+					Writing
+				</h1>
+				<p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl">
+					Thoughts, tutorials, and insights on software engineering, design, and the modern web.
+				</p>
+			</section>
+
 			<section>
-				<ul>
+				<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
+						posts.map((post, i) => (
+							<li class="group flex flex-col h-full bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:border-accent/50 transition-colors duration-300 shadow-sm hover:shadow-md animate-fade-in-up" style={`animation-delay: ${i * 100}ms`}>
+								<a href={`/blog/${post.id}/`} class="flex flex-col h-full">
 									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
+										<div class="overflow-hidden aspect-video w-full">
+											<Image 
+												width={720} 
+												height={360} 
+												src={post.data.heroImage} 
+												alt="" 
+												class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+											/>
+										</div>
 									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
+									<div class="p-8 flex flex-col flex-grow">
+										<div class="flex items-center text-sm font-medium text-accent mb-3">
+											<FormattedDate date={post.data.pubDate} />
+											<span class="mx-2 text-gray-400 dark:text-gray-600">•</span>
+											<span class="text-gray-500 dark:text-gray-400">{post.readTime}</span>
+										</div>
+										<h4 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white mb-3 group-hover:text-accent transition-colors line-clamp-2">
+											{post.data.title}
+										</h4>
+										<p class="text-gray-600 dark:text-gray-400 line-clamp-3">
+											{post.data.description}
+										</p>
+									</div>
 								</a>
 							</li>
 						))
@@ -109,6 +62,4 @@ const posts = (await getCollection('blog')).sort(
 				</ul>
 			</section>
 		</main>
-		<Footer />
-	</body>
-</html>
+</Layout>

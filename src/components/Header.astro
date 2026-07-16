@@ -1,85 +1,169 @@
 ---
-import { SITE_TITLE } from '../consts';
-import HeaderLink from './HeaderLink.astro';
+import logo from "../assets/logo.svg";
+import ThemeToggle from "./ThemeToggle.astro";
 ---
 
-<header>
-	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
-		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
-		</div>
-		<div class="social-links">
-			<a href="https://m.webtoo.ls/@astro" target="_blank">
-				<span class="sr-only">Follow Astro on Mastodon</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
-					><path
-						fill="currentColor"
-						d="M11.19 12.195c2.016-.24 3.77-1.475 3.99-2.603.348-1.778.32-4.339.32-4.339 0-3.47-2.286-4.488-2.286-4.488C12.062.238 10.083.017 8.027 0h-.05C5.92.017 3.942.238 2.79.765c0 0-2.285 1.017-2.285 4.488l-.002.662c-.004.64-.007 1.35.011 2.091.083 3.394.626 6.74 3.78 7.57 1.454.383 2.703.463 3.709.408 1.823-.1 2.847-.647 2.847-.647l-.06-1.317s-1.303.41-2.767.36c-1.45-.05-2.98-.156-3.215-1.928a3.614 3.614 0 0 1-.033-.496s1.424.346 3.228.428c1.103.05 2.137-.064 3.188-.189zm1.613-2.47H11.13v-4.08c0-.859-.364-1.295-1.091-1.295-.804 0-1.207.517-1.207 1.541v2.233H7.168V5.89c0-1.024-.403-1.541-1.207-1.541-.727 0-1.091.436-1.091 1.296v4.079H3.197V5.522c0-.859.22-1.541.66-2.046.456-.505 1.052-.764 1.793-.764.856 0 1.504.328 1.933.983L8 4.39l.417-.695c.429-.655 1.077-.983 1.934-.983.74 0 1.336.259 1.791.764.442.505.661 1.187.661 2.046v4.203z"
-					></path></svg
-				>
-			</a>
-			<a href="https://twitter.com/astrodotbuild" target="_blank">
-				<span class="sr-only">Follow Astro on Twitter</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
-					><path
-						fill="currentColor"
-						d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"
-					></path></svg
-				>
-			</a>
-			<a href="https://github.com/withastro/astro" target="_blank">
-				<span class="sr-only">Go to Astro's GitHub repo</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
-					><path
-						fill="currentColor"
-						d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-					></path></svg
-				>
-			</a>
-		</div>
-	</nav>
-</header>
-<style>
-	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
-	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
-	}
+<div class="w-full fixed h-40 top-0 z-[21] pointer-events-none">
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);"
+  >
+  </div>
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); mask-image: linear-gradient(to bottom, black 45%, transparent 85%); -webkit-mask-image: linear-gradient(to bottom, black 45%, transparent 85%);"
+  >
+  </div>
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); mask-image: linear-gradient(to bottom, black 30%, transparent 70%); -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 70%);"
+  >
+  </div>
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); mask-image: linear-gradient(to bottom, black 15%, transparent 55%); -webkit-mask-image: linear-gradient(to bottom, black 15%, transparent 55%);"
+  >
+  </div>
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); mask-image: linear-gradient(to bottom, black 0%, transparent 40%); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 40%);"
+  >
+  </div>
+</div>
 
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
-	}
-	nav {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
-		text-decoration: none;
-	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--accent);
-	}
-	.social-links,
-	.social-links a {
-		display: flex;
-	}
-	@media (max-width: 720px) {
-		.social-links {
-			display: none;
-		}
-	}
-</style>
+<header class="fixed top-0 left-0 w-full z-50 pointer-events-none">
+  <div
+    class="container flex justify-between items-center px-6 py-6 lg:px-8 mx-auto"
+  >
+    <div class="pointer-events-auto">
+      <a href="/" class="flex items-center gap-2 group">
+        <img
+          src={logo.src}
+          alt="Brand Logo"
+          height="40px"
+          width="40px"
+          class="w-8 h-auto transition-transform dark:invert"
+        />
+      </a>
+    </div>
+
+    <!-- Center/Right wrapper -->
+    <div class="flex items-center gap-4 lg:gap-8 pointer-events-auto">
+      <!-- Navigation with Sliding Magic Pill effect -->
+      <nav class="hidden lg:block">
+        <!-- Floating glass container for the nav -->
+        <ul id="nav-menu" class="relative flex items-center gap-1 px-2 py-1.5">
+          <!-- The sliding background pill -->
+          <div
+            id="nav-pill"
+            class="absolute left-0 top-0 bg-black/5 dark:bg-white/10 rounded-full transition-all duration-300 ease-out opacity-0 pointer-events-none z-0"
+          >
+          </div>
+
+          <li class="relative z-10">
+            <a
+              href="/work"
+              class="nav-link inline-block px-5 py-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors duration-200"
+              >Work</a
+            >
+          </li>
+          <li class="relative z-10">
+            <a
+              href="/services"
+              class="nav-link inline-block px-5 py-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors duration-200"
+              >Services</a
+            >
+          </li>
+          <li class="relative z-10">
+            <a
+              href="/blog"
+              class="nav-link inline-block px-5 py-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors duration-200"
+              >Blog</a
+            >
+          </li>
+          <li class="relative z-10">
+            <a
+              href="/about"
+              class="nav-link inline-block px-5 py-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors duration-200"
+              >About</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-full border border-gray-200/50 dark:border-gray-800/50 hover:bg-white/60 dark:hover:bg-slate-900/60 transition-colors duration-300 shadow-xs p-1"
+        >
+          <ThemeToggle />
+        </div>
+
+        <a
+          href="/contact"
+          class="hidden sm:flex items-center justify-center h-12 px-8 rounded-full bg-accent text-white font-medium hover:bg-accent-hover transition-all duration-300 shadow-lg shadow-accent/10"
+        >
+          Start project
+        </a>
+
+        <button
+          class="flex lg:hidden flex-col justify-center items-center gap-1 w-12 h-12 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-full shadow-sm border border-gray-200/50 dark:border-gray-800/50"
+        >
+          <div class="w-4 h-0.5 bg-slate-900 dark:bg-white rounded"></div>
+          <div class="w-4 h-0.5 bg-slate-900 dark:bg-white rounded"></div>
+          <div class="w-4 h-0.5 bg-slate-900 dark:bg-white rounded"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  function initNavPill() {
+    const navMenu = document.getElementById("nav-menu");
+    const navPill = document.getElementById("nav-pill");
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    if (!navMenu || !navPill) return;
+
+    navLinks.forEach((link) => {
+      link.addEventListener("mouseenter", (e) => {
+        const target = e.currentTarget as HTMLElement;
+        const menuRect = navMenu.getBoundingClientRect();
+        const linkRect = target.getBoundingClientRect();
+
+        const left = linkRect.left - menuRect.left;
+        const top = linkRect.top - menuRect.top;
+
+        // If the pill is currently hidden, snap it to position without animating
+        if (navPill.style.opacity === "0" || navPill.style.opacity === "") {
+          navPill.style.transition = "none";
+          navPill.style.width = `${linkRect.width}px`;
+          navPill.style.height = `${linkRect.height}px`;
+          navPill.style.transform = `translate(${left}px, ${top}px)`;
+
+          // Force reflow to apply instantaneous position
+          navPill.offsetHeight;
+
+          // Re-enable CSS transitions and fade in
+          navPill.style.transition = "";
+          navPill.style.opacity = "1";
+        } else {
+          // If already visible, smoothly animate position and size
+          navPill.style.width = `${linkRect.width}px`;
+          navPill.style.height = `${linkRect.height}px`;
+          navPill.style.transform = `translate(${left}px, ${top}px)`;
+        }
+      });
+    });
+
+    navMenu.addEventListener("mouseleave", () => {
+      navPill.style.opacity = "0";
+    });
+  }
+
+  // Initialize on page load
+  initNavPill();
+
+  // Re-initialize after view transitions (if Astro View Transitions are used)
+  document.addEventListener("astro:page-load", initNavPill);
+</script>

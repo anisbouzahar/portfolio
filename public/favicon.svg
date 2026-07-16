@@ -1,9 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
-    <path d="M50.4 78.5a75.1 75.1 0 0 0-28.5 6.9l24.2-65.7c.7-2 1.9-3.2 3.4-3.2h29c1.5 0 2.7 1.2 3.4 3.2l24.2 65.7s-11.6-7-28.5-7L67 45.5c-.4-1.7-1.6-2.8-2.9-2.8-1.3 0-2.5 1.1-2.9 2.7L50.4 78.5Zm-1.1 28.2Zm-4.2-20.2c-2 6.6-.6 15.8 4.2 20.2a17.5 17.5 0 0 1 .2-.7 5.5 5.5 0 0 1 5.7-4.5c2.8.1 4.3 1.5 4.7 4.7.2 1.1.2 2.3.2 3.5v.4c0 2.7.7 5.2 2.2 7.4a13 13 0 0 0 5.7 4.9v-.3l-.2-.3c-1.8-5.6-.5-9.5 4.4-12.8l1.5-1a73 73 0 0 0 3.2-2.2 16 16 0 0 0 6.8-11.4c.3-2 .1-4-.6-6l-.8.6-1.6 1a37 37 0 0 1-22.4 2.7c-5-.7-9.7-2-13.2-6.2Z" />
-    <style>
-        path { fill: #000; }
-        @media (prefers-color-scheme: dark) {
-            path { fill: #FFF; }
-        }
-    </style>
+<svg width="635" height="641" viewBox="0 0 635 641" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_70_2)">
+<rect width="635" height="641" rx="260" fill="white"/>
+<g clip-path="url(#clip1_70_2)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M535.423 474.142C535.423 474.142 456.673 480.219 424.539 474.469C379.922 466.487 328.714 306.234 284.52 277.362C245.406 251.807 211.31 289.463 211.31 289.463C234.7 248.151 252.148 212.769 280.573 171.193C301.424 140.695 347.117 149.995 369.117 188.23C402.407 246.084 535.423 474.142 535.423 474.142Z" fill="black"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M298.672 475.444C298.672 475.444 251.265 395.621 230.143 376.552C203.586 352.575 153.956 368.473 145.205 400.59C137.187 430.044 158.856 459.963 187.996 468.43C207.488 474.095 298.672 475.444 298.672 475.444Z" fill="black" stroke="black" stroke-miterlimit="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_70_2">
+<rect width="635" height="641" fill="white"/>
+</clipPath>
+<clipPath id="clip1_70_2">
+<rect width="393" height="323" fill="white" transform="translate(143 153)"/>
+</clipPath>
+</defs>
 </svg>

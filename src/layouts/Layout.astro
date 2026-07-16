@@ -1,0 +1,168 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import CtaSection from '../components/CtaSection.astro';
+
+interface Props {
+	title: string;
+	description: string;
+	bodyClass?: string;
+	useRevealFooter?: boolean;
+}
+
+const { title, description, bodyClass = "", useRevealFooter = true } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<slot name="head" />
+	</head>
+	<body class={`bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-300 antialiased selection:bg-accent selection:text-white ${bodyClass}`}>
+		
+		<Header />
+		
+		<div id="main-content" class="relative z-10 bg-white dark:bg-slate-950 rounded-b-[3rem] sm:rounded-b-[4rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-b border-gray-200/50 dark:border-gray-800/50 overflow-hidden">
+			<slot name="background" />
+			<main class="w-full">
+				<slot />
+				<CtaSection />
+			</main>
+		</div>
+		
+		<div id="reveal-footer" class="fixed bottom-0 left-0 w-full z-0 h-auto">
+			<Footer />
+		</div>
+		
+		<script>
+			function initFooterReveal() {
+				const footer = document.getElementById('reveal-footer');
+				const mainContent = document.getElementById('main-content');
+
+				if (!footer || !mainContent) return;
+
+				const updateFooterHeight = () => {
+					// Check if combined height of CTA + Footer is taller than screen
+					// If so, disable fixed effect so it doesn't get clipped on mobile
+					if (footer.offsetHeight >= window.innerHeight) {
+						footer.classList.remove('fixed', 'bottom-0');
+						footer.classList.add('relative');
+						mainContent.style.marginBottom = '0px';
+					} else {
+						footer.classList.remove('relative');
+						footer.classList.add('fixed', 'bottom-0');
+						mainContent.style.marginBottom = `${footer.offsetHeight}px`;
+					}
+				};
+
+				let lastWidth = window.innerWidth;
+				window.addEventListener('resize', () => {
+					if (window.innerWidth !== lastWidth) {
+						lastWidth = window.innerWidth;
+						requestAnimationFrame(updateFooterHeight);
+					}
+				}, { passive: true });
+				
+				setTimeout(updateFooterHeight, 100);
+			}
+
+			window.addEventListener("load", initFooterReveal);
+			document.addEventListener("astro:page-load", initFooterReveal);
+		</script>
+
+		<script>
+			import Lenis from "lenis";
+
+			const initScroll = () => {
+				if (window.lenis) {
+					window.lenis.destroy();
+				}
+				window.lenis = new Lenis({
+					autoRaf: true,
+					duration: 1.2,
+					easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+				});
+			};
+
+			initScroll();
+
+			document.addEventListener("astro:page-load", initScroll);
+			document.addEventListener("astro:before-swap", () => {
+				if (window.lenis) {
+					window.lenis.destroy();
+					window.lenis = null;
+				}
+			});
+
+			const observerOptions = {
+				root: null,
+				rootMargin: "0px 0px -10% 0px",
+				threshold: 0.1,
+			};
+
+			const revealObserver = new IntersectionObserver((entries, observer) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add("active");
+						observer.unobserve(entry.target);
+					}
+				});
+			}, observerOptions);
+
+			const initReveals = () => {
+				const revealElements = document.querySelectorAll(
+					".reveal:not(.active)",
+				);
+				revealElements.forEach((el) => revealObserver.observe(el));
+			};
+
+			initReveals();
+
+			document.addEventListener("astro:page-load", () => {
+				initReveals();
+			});
+		</script>
+	</body>
+</html>
+
+<style is:global>
+	.reveal {
+		opacity: 0;
+		transform: translateY(40px);
+		transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+		will-change: opacity, transform;
+		backface-visibility: hidden;
+	}
+	.reveal.active {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	@keyframes gradient {
+		0% { background-position: 0% 50%; }
+		50% { background-position: 100% 50%; }
+		100% { background-position: 0% 50%; }
+	}
+	.animate-gradient {
+		animation: gradient 6s linear infinite;
+	}
+	@keyframes blurInUp {
+		0% {
+			opacity: 0;
+			filter: blur(12px);
+			transform: translateY(30px);
+		}
+		100% {
+			opacity: 1;
+			filter: blur(0);
+			transform: translateY(0);
+		}
+	}
+	.animate-blur-in-up {
+		opacity: 0;
+		animation: blurInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		will-change: opacity, transform, filter;
+		backface-visibility: hidden;
+	}
+</style>

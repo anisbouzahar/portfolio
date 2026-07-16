@@ -1,86 +1,175 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+import type { MarkdownHeading } from 'astro';
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+type Props = CollectionEntry<'blog'>['data'] & {
+	headings?: MarkdownHeading[];
+	readTime?: string;
+};
+
+const { title, description, pubDate, updatedDate, heroImage, headings, readTime } = Astro.props;
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+<Layout title={title} description={description} bodyClass="flex flex-col min-h-screen">
+		<main class="flex-grow w-full max-w-6xl mx-auto px-6 py-10 pt-32 md:py-16 md:pt-40">
+			<!-- HERO SECTION -->
+			<div class="relative w-full mb-16 md:mb-24 flex flex-col items-center">
+				<!-- HERO IMAGE (Widescreen, behind header) -->
+				{heroImage ? (
+					<div class="w-full animate-fade-in-up">
+						<Image width={1200} height={600} src={heroImage} alt="" class="object-cover w-full h-[40vh] md:h-[60vh] max-h-[600px] rounded-3xl md:rounded-[2.5rem] shadow-sm" />
+					</div>
+				) : (
+					<div class="w-full h-32"></div>
+				)}
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
+				<!-- OVERLAPPING GLASS HEADER -->
+				<div class="w-[90%] md:w-[85%] max-w-4xl -mt-20 md:-mt-32 relative z-10 animate-fade-in-up" style="animation-delay: 150ms;">
+					<div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/40 dark:border-white/10 p-8 md:p-12 rounded-3xl md:rounded-[2rem] shadow-xl hover:shadow-2xl transition-shadow duration-300">
+						<a href="/blog" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-accent transition-colors mb-6 group">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 transition-transform group-hover:-translate-x-1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+							Back to posts
+						</a>
+
+						<h1 class="mb-6 text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">{title}</h1>
+						
+						<div class="flex items-center text-sm font-medium text-accent">
 							<FormattedDate date={pubDate} />
 							{
 								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
+									<span class="italic text-gray-500 dark:text-gray-400 ml-2">
+										(Updated <FormattedDate date={updatedDate} />)
+									</span>
 								)
 							}
+							{readTime && (
+								<>
+									<span class="mx-2 text-gray-400 dark:text-gray-600">•</span>
+									<span class="text-gray-500 dark:text-gray-400">{readTime}</span>
+								</>
+							)}
 						</div>
-						<h1>{title}</h1>
-						<hr />
 					</div>
+				</div>
+			</div>
+
+			<!-- CONTENT GRID -->
+			<div class="grid grid-cols-1 lg:grid-cols-[1fr_250px] gap-12 lg:gap-16 items-start max-w-5xl mx-auto">
+				<!-- Main Article Content -->
+				<article class="animate-fade-in-up w-full max-w-3xl mx-auto lg:mx-0" style="animation-delay: 200ms;">
+				
+				<div class="prose prose-lg dark:prose-invert prose-slate max-w-none 
+					prose-headings:font-bold prose-headings:tracking-tight 
+					prose-a:text-accent hover:prose-a:text-accent-hover prose-a:transition-colors
+					prose-img:rounded-2xl prose-img:border prose-img:border-gray-100 dark:prose-img:border-gray-800
+					prose-blockquote:border-accent prose-blockquote:bg-accent/5 prose-blockquote:py-1 prose-blockquote:px-5 prose-blockquote:rounded-r-lg prose-blockquote:font-medium
+					leading-relaxed">
 					<slot />
 				</div>
 			</article>
+
+			<!-- Sticky Table of Contents (Desktop Only) -->
+			{headings && headings.length > 0 && (
+				<aside class="hidden lg:block sticky top-32 animate-fade-in-up" style="animation-delay: 200ms;">
+					<h3 class="font-bold text-sm uppercase tracking-wider text-gray-900 dark:text-white mb-4">On this page</h3>
+					<nav id="toc" class="relative pl-4 py-1">
+						<!-- Vertical track line -->
+						<div class="absolute left-0 top-0 w-[2px] h-full bg-gray-200 dark:bg-gray-800 rounded-full"></div>
+						<!-- Vertical progress line -->
+						<div id="scroll-progress" class="absolute left-0 top-0 w-[2px] bg-accent rounded-full" style="height: 0%;"></div>
+						
+						<ul class="space-y-3 text-sm relative z-10">
+							{headings.filter(h => h.depth > 1 && h.depth < 4).map((heading) => (
+								<li class={heading.depth === 3 ? "ml-4" : ""}>
+									<a 
+										href={`#${heading.slug}`} 
+										class="toc-link block text-gray-500 dark:text-gray-400 hover:text-accent dark:hover:text-accent transition-colors duration-200 line-clamp-2"
+									>
+										{heading.text}
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				</aside>
+			)}
+			</div>
 		</main>
-		<Footer />
-	</body>
-</html>
+
+		<script>
+			const initBlogScripts = () => {
+				// Scroll Progress Bar
+				const progressBar = document.getElementById('scroll-progress');
+				
+				// ScrollSpy for ToC
+				const observerOptions = {
+					root: null,
+					rootMargin: '0px 0px -80% 0px', // Trigger when heading is near the top
+					threshold: 1.0
+				};
+
+				const headingElements = Array.from(document.querySelectorAll('article h2, article h3'));
+				const tocLinks = document.querySelectorAll('.toc-link');
+				let activeId = '';
+
+				const handleScroll = () => {
+					// Progress Bar logic
+					const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+					const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+					const scrolled = (winScroll / height) * 100;
+					if (progressBar) {
+						progressBar.style.height = scrolled + '%';
+					}
+
+					// ScrollSpy logic (manual fallback since IntersectionObserver can be finicky for tall sections)
+					const scrollPosition = window.scrollY + 100;
+					let current = '';
+
+					headingElements.forEach(heading => {
+						if (heading.offsetTop <= scrollPosition) {
+							current = heading.id;
+						}
+					});
+
+					if (current !== activeId) {
+						activeId = current;
+						tocLinks.forEach(link => {
+							link.classList.remove('text-accent', 'dark:text-accent', 'font-semibold');
+							if (link.getAttribute('href') === `#${activeId}`) {
+								link.classList.add('text-accent', 'dark:text-accent', 'font-semibold');
+							}
+						});
+					}
+				};
+
+				window.addEventListener('scroll', handleScroll, { passive: true });
+				
+				// Run once on load
+				handleScroll();
+
+				// Smooth scroll for ToC links
+				tocLinks.forEach(link => {
+					link.addEventListener('click', (e) => {
+						const href = link.getAttribute('href');
+						if (href && href.startsWith('#')) {
+							// Lenis is handling scroll natively via CSS smooth scroll if configured, 
+							// or we can let native anchor linking work.
+							// For robust Lenis support, you'd call lenis.scrollTo(href) here if lenis is globally available.
+						}
+					});
+				});
+				
+				// Cleanup on Astro view transition
+				document.addEventListener('astro:before-swap', () => {
+					window.removeEventListener('scroll', handleScroll);
+				}, { once: true });
+			};
+
+			initBlogScripts();
+			document.addEventListener("astro:page-load", initBlogScripts);
+		</script>
+</Layout>

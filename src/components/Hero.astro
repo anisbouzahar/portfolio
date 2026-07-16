@@ -1,0 +1,241 @@
+---
+---
+      <section
+        class="min-h-screen flex items-center justify-center pt-20 px-6 relative overflow-hidden"
+        id="hero"
+      >
+        <div
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-accent/10 via-white to-white dark:from-accent/10 dark:via-slate-950 dark:to-slate-950 -z-20"
+        >
+        </div>
+        <canvas
+          id="hero-canvas"
+          class="absolute inset-0 w-full h-full -z-10 opacity-70"></canvas>
+
+        <div
+          class="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-white dark:from-slate-950 to-transparent pointer-events-none z-0"
+        >
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center space-y-8 relative z-10">
+          <h1
+            class="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter leading-[1.1] animate-blur-in-up"
+          >
+            Digital craftsman <br class="hidden md:block" />
+            <span
+              id="hero-gradient-text"
+              class="text-transparent bg-clip-text transition-all duration-75 ease-out"
+              style="background-image: radial-gradient(circle at 50% 50%, var(--accent), #a855f7, var(--accent)); background-size: 200% 200%;"
+              >building sleek</span
+            > experiences.
+          </h1>
+
+          <p
+            class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed animate-blur-in-up"
+            style="animation-delay: 150ms;"
+          >
+            I'm a software engineer. I focus on building fast, highly
+            interactive web applications with a strong attention to detail.
+          </p>
+
+          <div
+            class="flex flex-wrap items-center justify-center gap-4 pt-4 animate-blur-in-up"
+            style="animation-delay: 300ms;"
+          >
+            <a
+              href="/work"
+              class="h-12 px-8 inline-flex items-center justify-center rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-medium hover:bg-slate-800 dark:hover:bg-gray-100 transition-colors duration-300"
+            >
+              View my work
+            </a>
+            <a
+              href="/contact"
+              class="h-12 px-8 inline-flex items-center justify-center rounded-full bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-gray-200/50 dark:border-gray-800/50 text-slate-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors duration-300"
+            >
+              Get in touch
+            </a>
+          </div>
+        </div>
+      </section>
+
+<script>
+      // --- Cursor Reactive Gradient ---
+      const gradientText = document.getElementById("hero-gradient-text");
+      if (gradientText) {
+        document.addEventListener("mousemove", (e) => {
+          // Calculate cursor position relative to the text element
+          const rect = gradientText.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          // Soft, glowing neon purple instead of harsh white
+          gradientText.style.backgroundImage = `radial-gradient(150px circle at ${x}px ${y}px, #e879f9 0%, var(--accent) 50%, var(--accent) 100%)`;
+        });
+      }
+
+      // --- Three.js Elegant Centerpiece ---
+      const initCanvas = async () => {
+        const {
+          Scene,
+          Color,
+          FogExp2,
+          PerspectiveCamera,
+          WebGLRenderer,
+          PlaneGeometry,
+          MeshBasicMaterial,
+          Mesh,
+        } = await import("three");
+        const canvas = document.getElementById("hero-canvas");
+        if (!canvas) return;
+
+        // Clear previous instances for hot reloads / Astro view transitions
+        if (window.heroRenderer) {
+          window.heroRenderer.dispose();
+          cancelAnimationFrame(window.heroCustomRender);
+        }
+
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        const scene = new Scene();
+        const isDark = document.documentElement.classList.contains("dark");
+
+        // Seamless Void Fade using FogExp2
+        // We use a solid background color to prevent WebGL alpha blending artifacts with fog
+        const bgColor = isDark ? 0x020617 : 0xffffff;
+        scene.background = new Color(bgColor);
+        scene.fog = new FogExp2(bgColor, 0.035);
+
+        // Camera
+        const camera = new PerspectiveCamera(60, width / height, 0.1, 200);
+        camera.position.set(0, 5, 20);
+        // Tilt camera down slightly to look at the scrolling terrain
+        camera.rotation.x = -0.2;
+
+        // Renderer
+        const renderer = new WebGLRenderer({ canvas, antialias: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        window.heroRenderer = renderer;
+
+        // --- WIREFRAME TERRAIN ---
+        // Reduced segments from 40x40 to 24x24 to save 60% CPU time in the math loop
+        const geometry = new PlaneGeometry(100, 100, 24, 24);
+        const material = new MeshBasicMaterial({
+          color: isDark ? 0xc084fc : 0x000000,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.25,
+        });
+
+        const terrain = new Mesh(geometry, material);
+        // Lay the plane flat
+        terrain.rotation.x = -Math.PI / 2;
+        // Move it down
+        terrain.position.y = -5;
+        scene.add(terrain);
+
+        // Apply organic wave displacement to vertices
+        const positions = geometry.attributes.position;
+        const originalZ = [];
+        for (let i = 0; i < positions.count; i++) {
+          originalZ.push(positions.getZ(i));
+        }
+
+        // --- PARALLAX MOUSE TRACKING ---
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        const windowHalfX = width / 2;
+        const windowHalfY = height / 2;
+
+        const onDocumentMouseMove = (event) => {
+          mouseX = (event.clientX - windowHalfX) * 0.05;
+          mouseY = (event.clientY - windowHalfY) * 0.05;
+        };
+        document.addEventListener("mousemove", onDocumentMouseMove);
+
+        // Pause animation when hero is out of view to save massive CPU
+        let isVisible = true;
+        const heroSection = document.getElementById("hero");
+        if (heroSection) {
+          const visibilityObserver = new IntersectionObserver((entries) => {
+            isVisible = entries[0].isIntersecting;
+          });
+          visibilityObserver.observe(heroSection);
+        }
+
+        // --- ANIMATION LOOP ---
+        const animate = () => {
+          // Only calculate heavy math and render if visible on screen
+          if (isVisible) {
+            const time = performance.now() * 0.001;
+
+            // Apply seamless wave displacement
+            for (let i = 0; i < positions.count; i++) {
+              const x = positions.getX(i);
+              const y = positions.getY(i);
+              const z =
+                Math.sin(x * 0.15 + time * 0.5) * 1.5 +
+                Math.cos(y * 0.15 + time * 2.0) * 1.5;
+              positions.setZ(i, z);
+            }
+            positions.needsUpdate = true;
+
+            // Smooth mouse parallax
+            targetX = mouseX * 0.2;
+            targetY = mouseY * 0.2;
+            camera.position.x += (targetX - camera.position.x) * 0.05;
+            camera.position.y += (5 - targetY - camera.position.y) * 0.05;
+            camera.lookAt(0, -2, 0);
+
+            renderer.render(scene, camera);
+          }
+          window.heroCustomRender = requestAnimationFrame(animate);
+        };
+
+        // Delay initial animation start slightly to allow main thread to breathe
+        setTimeout(() => {
+          animate();
+        }, 100);
+
+        // --- DYNAMIC THEME UPDATES ---
+        // Watch for dark mode toggle to update colors in real-time
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+              const currentlyDark =
+                document.documentElement.classList.contains("dark");
+              scene.background.setHex(currentlyDark ? 0x020617 : 0xffffff);
+              scene.fog.color.setHex(currentlyDark ? 0x020617 : 0xffffff);
+              material.color.setHex(currentlyDark ? 0xc084fc : 0x000000);
+            }
+          });
+        });
+        observer.observe(document.documentElement, { attributes: true });
+
+        // Cleanup observer on view transition
+        document.addEventListener(
+          "astro:before-swap",
+          () => observer.disconnect(),
+          { once: true },
+        );
+
+        // Handle resize
+        window.addEventListener("resize", () => {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width, height);
+        });
+      };
+
+  // Initialize and add to astro:page-load if using view transitions
+  initCanvas();
+
+  document.addEventListener("astro:page-load", () => {
+    initCanvas();
+  });
+</script>
