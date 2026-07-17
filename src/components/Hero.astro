@@ -269,10 +269,24 @@
         });
       };
 
-  // Initialize and add to astro:page-load if using view transitions
-  initCanvas();
+  // Initialize using idle callback to avoid blocking critical rendering path
+  const triggerInit = () => {
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => initCanvas());
+    } else {
+      setTimeout(initCanvas, 500);
+    }
+  };
+
+  if (document.readyState === 'complete') {
+    triggerInit();
+  } else {
+    window.addEventListener('load', triggerInit);
+  }
 
   document.addEventListener("astro:page-load", () => {
-    initCanvas();
+    if (document.readyState === 'complete') {
+      initCanvas();
+    }
   });
 </script>

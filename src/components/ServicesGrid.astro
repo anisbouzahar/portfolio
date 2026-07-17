@@ -270,7 +270,31 @@
     });
   };
 
-  // Run on initial load
-  setupChartReveal();
-  setupThemeListener();
+  // Run on initial load but deferred to avoid critical chain block
+  const triggerSetup = () => {
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => {
+        setupChartReveal();
+        setupThemeListener();
+      });
+    } else {
+      setTimeout(() => {
+        setupChartReveal();
+        setupThemeListener();
+      }, 500);
+    }
+  };
+
+  if (document.readyState === 'complete') {
+    triggerSetup();
+  } else {
+    window.addEventListener('load', triggerSetup);
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    if (document.readyState === 'complete') {
+      setupChartReveal();
+      setupThemeListener();
+    }
+  });
 </script>

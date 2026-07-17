@@ -70,11 +70,25 @@ const { title, description, image = FallbackImage } = Astro.props;
 
 <Font cssVariable="--font-atkinson" preload />
 
-<!-- Umami Analytics -->
-<script
-  defer
-  src="https://analytics.bouzahar.com/script.js"
-  data-website-id="cd9f247c-5f92-4f10-b089-e0abd1b780ee"></script>
+<!-- Umami Analytics (Deferred to avoid critical chain) -->
+<script is:inline>
+  if (typeof window !== 'undefined') {
+    const loadAnalytics = () => {
+      if (document.getElementById('umami-script')) return;
+      const script = document.createElement('script');
+      script.id = 'umami-script';
+      script.src = 'https://analytics.bouzahar.com/script.js';
+      script.defer = true;
+      script.setAttribute('data-website-id', 'cd9f247c-5f92-4f10-b089-e0abd1b780ee');
+      document.head.appendChild(script);
+    };
+    if (document.readyState === 'complete') {
+      setTimeout(loadAnalytics, 500);
+    } else {
+      window.addEventListener('load', () => setTimeout(loadAnalytics, 500));
+    }
+  }
+</script>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
