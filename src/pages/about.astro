@@ -156,55 +156,163 @@ const { milestones, page, philosophy, origin } = aboutData;
 </Layout>
 
 <script>
-	import { Scene, Color, FogExp2, PerspectiveCamera, WebGLRenderer, TorusKnotGeometry, MeshBasicMaterial, Mesh } from 'three';
-	
-	const initAboutCanvas = () => {
+	const initAboutCanvas = async () => {
+		const { Renderer, Camera, Transform, Program, Mesh, Geometry } = await import('ogl');
 		const canvas = document.getElementById('about-canvas') as HTMLCanvasElement;
 		// @ts-ignore
 		if (!canvas || window.aboutRenderer) return;
 
+		// @ts-ignore
+		if (window.aboutCustomRender) {
+			// @ts-ignore
+			cancelAnimationFrame(window.aboutCustomRender);
+		}
+
 		let width = window.innerWidth;
 		let height = window.innerHeight;
 		
-		const scene = new Scene();
 		const isDark = document.documentElement.classList.contains('dark');
+		const parseHex = (hex: number) => [((hex >> 16) & 255) / 255, ((hex >> 8) & 255) / 255, (hex & 255) / 255];
 		
-		const bgColor = isDark ? 0x020617 : 0xffffff;
-		scene.background = new Color(bgColor);
-		scene.fog = new FogExp2(bgColor, 0.015);
-		
-		const camera = new PerspectiveCamera(60, width / height, 0.1, 1000);
-		camera.position.set(0, 0, 30);
-		
-		const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
+		const darkBg = parseHex(0x020617);
+		const lightBg = parseHex(0xffffff);
+		const darkWire = parseHex(0xc084fc);
+		const lightWire = parseHex(0x000000);
+
+		const currentBg = isDark ? darkBg : lightBg;
+
+		const renderer = new Renderer({ canvas, antialias: true, alpha: true, dpr: Math.min(window.devicePixelRatio, 2) });
+		const gl = renderer.gl;
+		gl.clearColor(currentBg[0], currentBg[1], currentBg[2], 1);
 		renderer.setSize(width, height);
-		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		// @ts-ignore
 		window.aboutRenderer = renderer;
 
-		// --- COMPLEX POLYGON ---
-		const geometry = new TorusKnotGeometry(10, 3, 128, 16);
-		const material = new MeshBasicMaterial({ 
-			color: isDark ? 0xc084fc : 0x000000, 
-			wireframe: true,
-			transparent: true,
-			opacity: 0.15
+		const scene = new Transform();
+		const camera = new Camera(gl, { fov: 60, aspect: width / height });
+		camera.position.set(0, 0, 30);
+
+		// --- COMPLEX POLYGON (Torus Knot) ---
+		const radius = 10;
+		const tube = 3;
+		const tubularSegments = 128;
+		const radialSegments = 16;
+		const p = 2;
+		const q = 3;
+		
+		const vertexCount = (tubularSegments + 1) * (radialSegments + 1);
+		const positions = new Float32Array(vertexCount * 3);
+		const indices: number[] = [];
+
+		const calculatePositionOnCurve = (u: number, target: number[]) => {
+			const cu = Math.cos(u);
+			const su = Math.sin(u);
+			const quOverP = q / p * u;
+			const cs = Math.cos(quOverP);
+
+			target[0] = radius * (2 + cs) * 0.5 * cu;
+			target[1] = radius * (2 + cs) * 0.5 * su;
+			target[2] = radius * Math.sin(quOverP) * 0.5;
+		};
+
+		const p1 = [0,0,0], p2 = [0,0,0];
+		const T = [0,0,0], N = [0,0,0], B = [0,0,0];
+
+		let vertexIndex = 0;
+		for (let i = 0; i <= tubularSegments; ++i) {
+			const u = i / tubularSegments * p * Math.PI * 2;
+			calculatePositionOnCurve(u, p1);
+			calculatePositionOnCurve(u + 0.01, p2);
+
+			T[0] = p2[0] - p1[0]; T[1] = p2[1] - p1[1]; T[2] = p2[2] - p1[2];
+			let len = Math.sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+			T[0]/=len; T[1]/=len; T[2]/=len;
+
+			N[0] = p2[0] + p1[0]; N[1] = p2[1] + p1[1]; N[2] = p2[2] + p1[2];
+			len = Math.sqrt(N[0]*N[0] + N[1]*N[1] + N[2]*N[2]);
+			N[0]/=len; N[1]/=len; N[2]/=len;
+
+			B[0] = T[1]*N[2] - T[2]*N[1]; B[1] = T[2]*N[0] - T[0]*N[2]; B[2] = T[0]*N[1] - T[1]*N[0];
+			len = Math.sqrt(B[0]*B[0] + B[1]*B[1] + B[2]*B[2]);
+			B[0]/=len; B[1]/=len; B[2]/=len;
+
+			N[0] = B[1]*T[2] - B[2]*T[1]; N[1] = B[2]*T[0] - B[0]*T[2]; N[2] = B[0]*T[1] - B[1]*T[0];
+
+			for (let j = 0; j <= radialSegments; ++j) {
+				const v = j / radialSegments * Math.PI * 2;
+				const cx = -tube * Math.cos(v);
+				const cy = tube * Math.sin(v);
+
+				positions[vertexIndex * 3] = p1[0] + (cx * N[0] + cy * B[0]);
+				positions[vertexIndex * 3 + 1] = p1[1] + (cx * N[1] + cy * B[1]);
+				positions[vertexIndex * 3 + 2] = p1[2] + (cx * N[2] + cy * B[2]);
+
+				if (i < tubularSegments && j < radialSegments) {
+					const a = vertexIndex;
+					const b = vertexIndex + radialSegments + 1;
+					const c = vertexIndex + radialSegments + 2;
+					const d = vertexIndex + 1;
+					indices.push(a, b, a, d);
+				}
+				vertexIndex++;
+			}
+		}
+
+		const geometry = new Geometry(gl, {
+			position: { size: 3, data: positions },
+			index: { data: new Uint16Array(indices) }
 		});
 
-		const torusKnot = new Mesh(geometry, material);
-		scene.add(torusKnot);
+		const vertex = `
+			attribute vec3 position;
+			uniform mat4 modelViewMatrix;
+			uniform mat4 projectionMatrix;
+			void main() {
+				gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+			}
+		`;
+
+		const fragment = `
+			precision highp float;
+			uniform vec3 uColor;
+			uniform vec3 uFogColor;
+			uniform float uFogDensity;
+			
+			void main() {
+				float depth = gl_FragCoord.z / gl_FragCoord.w;
+				float fogFactor = exp2(-uFogDensity * uFogDensity * depth * depth * 1.442695);
+				fogFactor = clamp(fogFactor, 0.0, 1.0);
+				
+				vec4 color = vec4(uColor, 0.15);
+				vec4 fogColor = vec4(uFogColor, 1.0);
+				
+				gl_FragColor = mix(fogColor, color, fogFactor);
+			}
+		`;
+
+		const program = new Program(gl, {
+			vertex,
+			fragment,
+			uniforms: {
+				uColor: { value: isDark ? darkWire : lightWire },
+				uFogColor: { value: currentBg },
+				uFogDensity: { value: 0.015 }
+			},
+			transparent: true
+		});
+
+		const torusKnot = new Mesh(gl, { geometry, program, mode: gl.LINES });
+		torusKnot.setParent(scene);
 
 		// Handle Theme Toggling
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
 				if (mutation.attributeName === 'class') {
 					const currentlyDark = document.documentElement.classList.contains('dark');
-					const newBgColor = currentlyDark ? 0x020617 : 0xffffff;
-					const newMeshColor = currentlyDark ? 0xc084fc : 0x000000;
-					
-					scene.background.setHex(newBgColor);
-					scene.fog.color.setHex(newBgColor);
-					material.color.setHex(newMeshColor);
+					const bg = currentlyDark ? darkBg : lightBg;
+					program.uniforms.uColor.value = currentlyDark ? darkWire : lightWire;
+					program.uniforms.uFogColor.value = bg;
+					gl.clearColor(bg[0], bg[1], bg[2], 1);
 				}
 			});
 		});
@@ -215,7 +323,8 @@ const { milestones, page, philosophy, origin } = aboutData;
 		const bgWrapper = document.getElementById('bg-wrapper');
 		
 		const animate = () => {
-			requestAnimationFrame(animate);
+			// @ts-ignore
+			window.aboutCustomRender = requestAnimationFrame(animate);
 			
 			// Keep background wrapper fixed to viewport by translating it with scroll
 			if (bgWrapper) {
@@ -234,7 +343,7 @@ const { milestones, page, philosophy, origin } = aboutData;
 			const scale = 1 + Math.sin(time) * 0.05;
 			torusKnot.scale.set(scale, scale, scale);
 
-			renderer.render(scene, camera);
+			renderer.render({ scene, camera });
 		};
 
 		animate();
@@ -243,8 +352,7 @@ const { milestones, page, philosophy, origin } = aboutData;
 		const onWindowResize = () => {
 			width = window.innerWidth;
 			height = window.innerHeight;
-			camera.aspect = width / height;
-			camera.updateProjectionMatrix();
+			camera.perspective({ aspect: width / height });
 			renderer.setSize(width, height);
 		};
 		window.addEventListener('resize', onWindowResize);
@@ -255,6 +363,7 @@ const { milestones, page, philosophy, origin } = aboutData;
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
 					entry.target.classList.add('animate-fade-in-up');
+					// @ts-ignore
 					entry.target.style.opacity = '1';
 				}
 			});

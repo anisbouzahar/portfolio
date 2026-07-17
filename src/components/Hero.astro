@@ -73,74 +73,129 @@
         });
       }
 
-      // --- Three.js Elegant Centerpiece ---
+      // --- OGL Elegant Centerpiece ---
       const initCanvas = async () => {
         const {
-          Scene,
-          Color,
-          FogExp2,
-          PerspectiveCamera,
-          WebGLRenderer,
-          PlaneGeometry,
-          MeshBasicMaterial,
+          Renderer,
+          Camera,
+          Transform,
+          Program,
           Mesh,
-        } = await import("three");
+          Geometry
+        } = await import("ogl");
         const canvas = document.getElementById("hero-canvas");
         if (!canvas) return;
 
         // Clear previous instances for hot reloads / Astro view transitions
-        if (window.heroRenderer) {
-          window.heroRenderer.dispose();
+        if (window.heroCustomRender) {
           cancelAnimationFrame(window.heroCustomRender);
         }
 
         let width = window.innerWidth;
         let height = window.innerHeight;
 
-        const scene = new Scene();
         const isDark = document.documentElement.classList.contains("dark");
+        const parseHex = (hex) => [((hex >> 16) & 255) / 255, ((hex >> 8) & 255) / 255, (hex & 255) / 255];
+        
+        const darkBg = parseHex(0x020617);
+        const lightBg = parseHex(0xffffff);
+        const darkWire = parseHex(0xc084fc);
+        const lightWire = parseHex(0x000000);
 
-        // Seamless Void Fade using FogExp2
-        // We use a solid background color to prevent WebGL alpha blending artifacts with fog
-        const bgColor = isDark ? 0x020617 : 0xffffff;
-        scene.background = new Color(bgColor);
-        scene.fog = new FogExp2(bgColor, 0.035);
-
-        // Camera
-        const camera = new PerspectiveCamera(60, width / height, 0.1, 200);
-        camera.position.set(0, 5, 20);
-        // Tilt camera down slightly to look at the scrolling terrain
-        camera.rotation.x = -0.2;
+        const currentBg = isDark ? darkBg : lightBg;
 
         // Renderer
-        const renderer = new WebGLRenderer({ canvas, antialias: true });
+        const renderer = new Renderer({ canvas, antialias: true, dpr: Math.min(window.devicePixelRatio, 2) });
+        const gl = renderer.gl;
+        gl.clearColor(currentBg[0], currentBg[1], currentBg[2], 1);
         renderer.setSize(width, height);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         window.heroRenderer = renderer;
 
+        const scene = new Transform();
+
+        // Camera
+        const camera = new Camera(gl, { fov: 60, aspect: width / height });
+        camera.position.set(0, 5, 20);
+        camera.rotation.x = -0.2;
+
         // --- WIREFRAME TERRAIN ---
-        // Reduced segments from 40x40 to 24x24 to save 60% CPU time in the math loop
-        const geometry = new PlaneGeometry(100, 100, 24, 24);
-        const material = new MeshBasicMaterial({
-          color: isDark ? 0xc084fc : 0x000000,
-          wireframe: true,
-          transparent: true,
-          opacity: 0.25,
+        // Increased segments from 24x24 to 80x80 since GPU handles the math!
+        const w = 100;
+        const h = 100;
+        const segmentsX = 80;
+        const segmentsY = 80;
+        
+        const positions = new Float32Array((segmentsX + 1) * (segmentsY + 1) * 3);
+        const indices = [];
+
+        for (let y = 0; y <= segmentsY; y++) {
+          for (let x = 0; x <= segmentsX; x++) {
+            const i = y * (segmentsX + 1) + x;
+            positions[i * 3] = (x / segmentsX - 0.5) * w;
+            positions[i * 3 + 1] = (y / segmentsY - 0.5) * h;
+            positions[i * 3 + 2] = 0;
+            
+            if (x < segmentsX) indices.push(i, i + 1);
+            if (y < segmentsY) indices.push(i, i + segmentsX + 1);
+          }
+        }
+
+        const geometry = new Geometry(gl, {
+            position: { size: 3, data: positions },
+            index: { data: new Uint16Array(indices) }
         });
 
-        const terrain = new Mesh(geometry, material);
-        // Lay the plane flat
-        terrain.rotation.x = -Math.PI / 2;
-        // Move it down
-        terrain.position.y = -5;
-        scene.add(terrain);
+        // Vertex Shader: Math is now on the GPU
+        const vertex = `
+            attribute vec3 position;
+            uniform mat4 modelViewMatrix;
+            uniform mat4 projectionMatrix;
+            uniform float uTime;
+            
+            void main() {
+                vec3 pos = position;
+                // Apply seamless wave displacement
+                pos.z = sin(pos.x * 0.15 + uTime * 0.5) * 1.5 + cos(pos.y * 0.15 + uTime * 2.0) * 1.5;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+            }
+        `;
 
-        // Apply organic wave displacement to vertices
-        const positions = geometry.attributes.position;
-        const originalZ = [];
-        for (let i = 0; i < positions.count; i++) {
-          originalZ.push(positions.getZ(i));
-        }
+        // Fragment Shader: Handles Color and Fog
+        const fragment = `
+            precision highp float;
+            uniform vec3 uColor;
+            uniform vec3 uFogColor;
+            uniform float uFogDensity;
+            
+            void main() {
+                // Fog calculation
+                float depth = gl_FragCoord.z / gl_FragCoord.w;
+                float fogFactor = exp2(-uFogDensity * uFogDensity * depth * depth * 1.442695);
+                fogFactor = clamp(fogFactor, 0.0, 1.0);
+                
+                vec4 color = vec4(uColor, 0.25);
+                vec4 fogColor = vec4(uFogColor, 1.0);
+                
+                gl_FragColor = mix(fogColor, color, fogFactor);
+            }
+        `;
+
+        const program = new Program(gl, {
+            vertex,
+            fragment,
+            uniforms: {
+                uTime: { value: 0 },
+                uColor: { value: isDark ? darkWire : lightWire },
+                uFogColor: { value: currentBg },
+                uFogDensity: { value: 0.035 }
+            },
+            transparent: true
+        });
+
+        const terrain = new Mesh(gl, { geometry, program, mode: gl.LINES });
+        terrain.rotation.x = -Math.PI / 2;
+        terrain.position.y = -5;
+        terrain.setParent(scene);
 
         // --- PARALLAX MOUSE TRACKING ---
         let mouseX = 0;
@@ -156,7 +211,6 @@
         };
         document.addEventListener("mousemove", onDocumentMouseMove);
 
-        // Pause animation when hero is out of view to save massive CPU
         let isVisible = true;
         const heroSection = document.getElementById("hero");
         if (heroSection) {
@@ -167,55 +221,39 @@
         }
 
         // --- ANIMATION LOOP ---
-        const animate = () => {
-          // Only calculate heavy math and render if visible on screen
+        const animate = (t) => {
+          window.heroCustomRender = requestAnimationFrame(animate);
+          
           if (isVisible) {
-            const time = performance.now() * 0.001;
-
-            // Apply seamless wave displacement
-            for (let i = 0; i < positions.count; i++) {
-              const x = positions.getX(i);
-              const y = positions.getY(i);
-              const z =
-                Math.sin(x * 0.15 + time * 0.5) * 1.5 +
-                Math.cos(y * 0.15 + time * 2.0) * 1.5;
-              positions.setZ(i, z);
-            }
-            positions.needsUpdate = true;
+            program.uniforms.uTime.value = t * 0.001;
 
             // Smooth mouse parallax
             targetX = mouseX * 0.2;
             targetY = mouseY * 0.2;
             camera.position.x += (targetX - camera.position.x) * 0.05;
             camera.position.y += (5 - targetY - camera.position.y) * 0.05;
-            camera.lookAt(0, -2, 0);
+            camera.lookAt([0, -2, 0]);
 
-            renderer.render(scene, camera);
+            renderer.render({ scene, camera });
           }
-          window.heroCustomRender = requestAnimationFrame(animate);
         };
 
-        // Delay initial animation start slightly to allow main thread to breathe
-        setTimeout(() => {
-          animate();
-        }, 100);
+        requestAnimationFrame(animate);
 
         // --- DYNAMIC THEME UPDATES ---
-        // Watch for dark mode toggle to update colors in real-time
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             if (mutation.attributeName === "class") {
-              const currentlyDark =
-                document.documentElement.classList.contains("dark");
-              scene.background.setHex(currentlyDark ? 0x020617 : 0xffffff);
-              scene.fog.color.setHex(currentlyDark ? 0x020617 : 0xffffff);
-              material.color.setHex(currentlyDark ? 0xc084fc : 0x000000);
+              const currentlyDark = document.documentElement.classList.contains("dark");
+              const bg = currentlyDark ? darkBg : lightBg;
+              program.uniforms.uColor.value = currentlyDark ? darkWire : lightWire;
+              program.uniforms.uFogColor.value = bg;
+              gl.clearColor(bg[0], bg[1], bg[2], 1);
             }
           });
         });
         observer.observe(document.documentElement, { attributes: true });
 
-        // Cleanup observer on view transition
         document.addEventListener(
           "astro:before-swap",
           () => observer.disconnect(),
@@ -226,8 +264,7 @@
         window.addEventListener("resize", () => {
           width = window.innerWidth;
           height = window.innerHeight;
-          camera.aspect = width / height;
-          camera.updateProjectionMatrix();
+          camera.perspective({ aspect: width / height });
           renderer.setSize(width, height);
         });
       };
