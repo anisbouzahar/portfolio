@@ -19,9 +19,9 @@
 
 .dark {
 
-  --accent: oklch(62% 0.22 295);
+  --accent: oklch(45% 0.25 295);
 
-  --accent-hover: oklch(68% 0.24 295);
+  --accent-hover: oklch(52% 0.25 295);
 
 }
 
