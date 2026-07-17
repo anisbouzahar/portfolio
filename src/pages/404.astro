@@ -57,9 +57,8 @@ import { SITE_TITLE } from '../consts';
 </html>
 
 <script>
-	const init404Canvas = async () => {
-		const { Renderer, Camera, Transform, Program, Mesh, Geometry } = await import('ogl');
-		
+	import { Renderer, Camera, Transform, Program, Mesh, Geometry } from 'ogl';
+	const init404Canvas = () => {
 		const canvas = document.getElementById('canvas-404');
 		if (!canvas) return;
 

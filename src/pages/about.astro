@@ -156,8 +156,8 @@ const { milestones, page, philosophy, origin } = aboutData;
 </Layout>
 
 <script>
-	const initAboutCanvas = async () => {
-		const { Renderer, Camera, Transform, Program, Mesh, Geometry } = await import('ogl');
+	import { Renderer, Camera, Transform, Program, Mesh, Geometry } from 'ogl';
+	const initAboutCanvas = () => {
 		const canvas = document.getElementById('about-canvas') as HTMLCanvasElement;
 		// @ts-ignore
 		if (!canvas || window.aboutRenderer) return;

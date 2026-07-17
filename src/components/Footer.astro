@@ -223,25 +223,44 @@ C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"
     }
   }
 
-  const triggerUpdate = () => {
-    if (window.requestIdleCallback) {
-      window.requestIdleCallback(() => updateStatus());
-    } else {
-      setTimeout(updateStatus, 1000);
-    }
-    setInterval(updateStatus, 60000);
+  let statusInterval;
+
+  const initStatusObserver = () => {
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Fetch immediately when visible
+          updateStatus();
+          // Then set interval
+          if (!statusInterval) {
+            statusInterval = setInterval(updateStatus, 60000);
+          }
+        } else {
+          // Pause fetching when not visible
+          if (statusInterval) {
+            clearInterval(statusInterval);
+            statusInterval = null;
+          }
+        }
+      });
+    }, { threshold: 0 });
+
+    observer.observe(footer);
   };
 
   if (document.readyState === 'complete') {
-    triggerUpdate();
+    initStatusObserver();
   } else {
-    window.addEventListener('load', triggerUpdate);
+    window.addEventListener('load', initStatusObserver);
   }
   
   // Re-trigger on Astro page swap for SPA-like navigation
   document.addEventListener('astro:page-load', () => {
     if (document.readyState === 'complete') {
-      updateStatus();
+      initStatusObserver();
     }
   });
 </script>

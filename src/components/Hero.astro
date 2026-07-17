@@ -59,6 +59,8 @@
       </section>
 
 <script>
+import { Renderer, Camera, Transform, Program, Mesh, Geometry } from "ogl";
+
       // --- Cursor Reactive Gradient ---
       const gradientText = document.getElementById("hero-gradient-text");
       if (gradientText) {
@@ -74,15 +76,7 @@
       }
 
       // --- OGL Elegant Centerpiece ---
-      const initCanvas = async () => {
-        const {
-          Renderer,
-          Camera,
-          Transform,
-          Program,
-          Mesh,
-          Geometry
-        } = await import("ogl");
+      const initCanvas = () => {
         const canvas = document.getElementById("hero-canvas");
         if (!canvas) return;
 
