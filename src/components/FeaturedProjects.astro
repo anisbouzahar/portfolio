@@ -24,31 +24,23 @@
           </a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {
-            [1, 2, 3, 4].map((item, i) => (
-              <div
-                class="reveal group relative overflow-hidden rounded-3xl bg-gray-100 dark:bg-slate-800 aspect-[4/3]"
-                style={`transition-delay: ${(i % 2) * 150}ms`}
-              >
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-10" />
-
-                <div class="absolute inset-0 bg-slate-200 dark:bg-slate-700 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" />
-
-                <div class="absolute bottom-0 left-0 p-8 z-20 w-full translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <p class="text-accent text-sm font-medium mb-2">
-                    Web Application
-                  </p>
-                  <h3 class="text-2xl font-bold text-white mb-2">
-                    Project {item}
-                  </h3>
-                  <p class="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                    A brief description of this amazing project and the
-                    technologies used to build it.
-                  </p>
-                </div>
-              </div>
-            ))
-          }
+        <div class="reveal w-full relative overflow-hidden rounded-3xl bg-slate-50 dark:bg-slate-900/50 border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center py-24 px-6 text-center">
+          <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+          <div class="relative z-10 max-w-lg mx-auto">
+            <div class="inline-flex items-center justify-center p-3 bg-accent/10 rounded-2xl mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </div>
+            <h3 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+              Cooking up something special
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+              I'm currently in the lab mixing pixels, code, and an unreasonable amount of caffeine. The best pieces are still simmering in the oven, but I promise they'll be worth the wait! 
+            </p>
+            <div class="flex items-center justify-center mt-6 gap-3 w-full opacity-80">
+              <div class="h-px flex-1 bg-gradient-to-r from-transparent to-accent/60"></div>
+              <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.25em] animate-pulse">Crafting</span>
+              <div class="h-px flex-1 bg-gradient-to-l from-transparent to-accent/60"></div>
+            </div>
+          </div>
         </div>
       </section>

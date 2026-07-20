@@ -46,39 +46,23 @@ const posts = (await getCollection("blog"))
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {
-            posts.map((post, i) => (
-              <article
-                class="reveal group flex flex-col h-full bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:border-accent/50 transition-colors duration-300 shadow-sm hover:shadow-md"
-                style={`transition-delay: ${i * 100}ms`}
-              >
-                <a href={`/blog/${post.id}/`} class="flex flex-col h-full">
-                  {post.data.heroImage && (
-                    <div class="overflow-hidden aspect-video w-full">
-                      <Image
-                        width={720}
-                        height={360}
-                        src={post.data.heroImage}
-                        alt=""
-                        class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-                  )}
-                  <div class="p-8 flex flex-col flex-grow">
-                    <div class="text-sm font-medium text-accent mb-3">
-                      <FormattedDate date={post.data.pubDate} />
-                    </div>
-                    <h3 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white mb-3 group-hover:text-accent transition-colors line-clamp-2">
-                      {post.data.title}
-                    </h3>
-                    <p class="text-gray-600 dark:text-gray-400 line-clamp-3">
-                      {post.data.description}
-                    </p>
-                  </div>
-                </a>
-              </article>
-            ))
-          }
+        <div class="reveal w-full relative overflow-hidden rounded-3xl bg-slate-50 dark:bg-slate-900/50 border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center py-24 px-6 text-center">
+          <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+          <div class="relative z-10 max-w-lg mx-auto">
+            <div class="inline-flex items-center justify-center p-3 bg-accent/10 rounded-2xl mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            </div>
+            <h3 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+              Writing in progress
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+              I'm currently wrestling with my keyboard to bring you spicy takes, late-night debugging epiphanies, and thoughts on making the web a cooler place. The first batch of articles is brewing!
+            </p>
+            <div class="flex items-center justify-center mt-6 gap-3 w-full opacity-80">
+              <div class="h-px flex-1 bg-gradient-to-r from-transparent to-accent/60"></div>
+              <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.25em] animate-pulse whitespace-nowrap">Publishing soon</span>
+              <div class="h-px flex-1 bg-gradient-to-l from-transparent to-accent/60"></div>
+            </div>
+          </div>
         </div>
       </section>

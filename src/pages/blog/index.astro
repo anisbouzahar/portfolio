@@ -1,65 +1,33 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
-
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-).map(post => {
-	const words = post.body ? post.body.trim().split(/\s+/).length : 0;
-	const readTime = Math.max(1, Math.ceil(words / 200)) + ' min read';
-	return { ...post, readTime };
-});
 ---
 
-<Layout title={SITE_TITLE} description={SITE_DESCRIPTION} bodyClass="flex flex-col min-h-screen">
-		<main class="flex-grow w-full max-w-6xl px-6 py-10 pt-32 mx-auto md:py-16 md:pt-40">
-			<section class="mb-16 animate-fade-in-up">
-				<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-slate-900 dark:text-white">
-					Writing
-				</h1>
-				<p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl">
-					Thoughts, tutorials, and insights on software engineering, design, and the modern web.
-				</p>
-			</section>
-
-			<section>
-				<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-					{
-						posts.map((post, i) => (
-							<li class="group flex flex-col h-full bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:border-accent/50 transition-colors duration-300 shadow-sm hover:shadow-md animate-fade-in-up" style={`animation-delay: ${i * 100}ms`}>
-								<a href={`/blog/${post.id}/`} class="flex flex-col h-full">
-									{post.data.heroImage && (
-										<div class="overflow-hidden aspect-video w-full">
-											<Image 
-												width={720} 
-												height={360} 
-												src={post.data.heroImage} 
-												alt="" 
-												class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-											/>
-										</div>
-									)}
-									<div class="p-8 flex flex-col flex-grow">
-										<div class="flex items-center text-sm font-medium text-accent mb-3">
-											<FormattedDate date={post.data.pubDate} />
-											<span class="mx-2 text-gray-400 dark:text-gray-600">•</span>
-											<span class="text-gray-500 dark:text-gray-400">{post.readTime}</span>
-										</div>
-										<h4 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white mb-3 group-hover:text-accent transition-colors line-clamp-2">
-											{post.data.title}
-										</h4>
-										<p class="text-gray-600 dark:text-gray-400 line-clamp-3">
-											{post.data.description}
-										</p>
-									</div>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
+<Layout title={`Blog - ${SITE_TITLE}`} description={SITE_DESCRIPTION} bodyClass="flex flex-col min-h-screen">
+  <main class="flex-grow w-full max-w-6xl px-6 py-10 pt-32 mx-auto md:py-16 md:pt-40 flex flex-col justify-center items-center">
+    <div class="w-full max-w-3xl mx-auto text-center animate-fade-in-up">
+      <div class="inline-flex items-center justify-center p-4 bg-accent/10 rounded-3xl mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-accent"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-white">
+        Writing
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed">
+        I'm currently wrestling with my keyboard to bring you spicy takes, late-night debugging epiphanies, and thoughts on making the web a cooler place. The first batch of articles is brewing!
+      </p>
+      
+      <div class="flex items-center justify-center mt-8 gap-4 w-full max-w-[200px] mx-auto opacity-80">
+        <div class="h-px flex-1 bg-gradient-to-r from-transparent to-accent/60"></div>
+        <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] animate-pulse whitespace-nowrap">Publishing soon</span>
+        <div class="h-px flex-1 bg-gradient-to-l from-transparent to-accent/60"></div>
+      </div>
+      
+      <div class="mt-12">
+        <a href="/" class="text-accent hover:text-accent-hover font-medium transition-colors inline-flex items-center group">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 transition-transform group-hover:-translate-x-1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Return Home
+        </a>
+      </div>
+    </div>
+  </main>
 </Layout>

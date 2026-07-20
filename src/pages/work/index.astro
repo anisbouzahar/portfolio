@@ -1,0 +1,75 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { SITE_TITLE } from "../../consts";
+---
+
+<Layout
+  title={`Work - ${SITE_TITLE}`}
+  description="Selected work and projects"
+  bodyClass="flex flex-col min-h-screen"
+>
+  <main
+    class="flex-grow w-full max-w-6xl px-6 py-10 pt-32 mx-auto md:py-16 md:pt-40 flex flex-col justify-center items-center"
+  >
+    <div class="w-full max-w-3xl mx-auto text-center animate-fade-in-up">
+      <div
+        class="inline-flex items-center justify-center p-4 bg-accent/10 rounded-3xl mb-8"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="40"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="text-accent"
+          ><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline
+            points="2 17 12 22 22 17"></polyline><polyline
+            points="2 12 12 17 22 12"></polyline></svg
+        >
+      </div>
+      <h1
+        class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-white"
+      >
+        Selected Work
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed">
+        I'm currently in the lab mixing pixels, code, and an unreasonable amount
+        of caffeine. The best pieces are still simmering in the oven, but I
+        promise they'll be worth the wait!
+      </p>
+
+      <div class="flex items-center justify-center mt-8 gap-4 w-full max-w-[200px] mx-auto opacity-80">
+        <div class="h-px flex-1 bg-gradient-to-r from-transparent to-accent/60"></div>
+        <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] animate-pulse">Crafting</span>
+        <div class="h-px flex-1 bg-gradient-to-l from-transparent to-accent/60"></div>
+      </div>
+
+      <div class="mt-12">
+        <a
+          href="/"
+          class="text-accent hover:text-accent-hover font-medium transition-colors inline-flex items-center group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="mr-2 transition-transform group-hover:-translate-x-1"
+            ><line x1="19" y1="12" x2="5" y2="12"></line><polyline
+              points="12 19 5 12 12 5"></polyline></svg
+          >
+          Return Home
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>
