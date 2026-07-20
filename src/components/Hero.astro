@@ -99,7 +99,7 @@ import { Renderer, Camera, Transform, Program, Mesh, Geometry } from "ogl";
         const currentBg = isDark ? darkBg : lightBg;
 
         // Renderer
-        const renderer = new Renderer({ canvas, antialias: true, dpr: Math.min(window.devicePixelRatio, 2) });
+        const renderer = new Renderer({ canvas, antialias: true, dpr: 1 }); // Hardcoded DPR to 1 to save GPU
         const gl = renderer.gl;
         gl.clearColor(currentBg[0], currentBg[1], currentBg[2], 1);
         renderer.setSize(width, height);
@@ -113,11 +113,10 @@ import { Renderer, Camera, Transform, Program, Mesh, Geometry } from "ogl";
         camera.rotation.x = -0.2;
 
         // --- WIREFRAME TERRAIN ---
-        // Increased segments from 24x24 to 80x80 since GPU handles the math!
         const w = 100;
         const h = 100;
-        const segmentsX = 80;
-        const segmentsY = 80;
+        const segmentsX = 40;
+        const segmentsY = 40;
         
         const positions = new Float32Array((segmentsX + 1) * (segmentsY + 1) * 3);
         const indices = [];
@@ -206,33 +205,41 @@ import { Renderer, Camera, Transform, Program, Mesh, Geometry } from "ogl";
         document.addEventListener("mousemove", onDocumentMouseMove);
 
         let isVisible = true;
+        let isAnimating = false;
         const heroSection = document.getElementById("hero");
-        if (heroSection) {
-          const visibilityObserver = new IntersectionObserver((entries) => {
-            isVisible = entries[0].isIntersecting;
-          });
-          visibilityObserver.observe(heroSection);
-        }
 
         // --- ANIMATION LOOP ---
         const animate = (t) => {
+          if (!isVisible) {
+            isAnimating = false;
+            return;
+          }
+          isAnimating = true;
           window.heroCustomRender = requestAnimationFrame(animate);
           
-          if (isVisible) {
-            program.uniforms.uTime.value = t * 0.001;
+          program.uniforms.uTime.value = t * 0.001;
 
-            // Smooth mouse parallax
-            targetX = mouseX * 0.2;
-            targetY = mouseY * 0.2;
-            camera.position.x += (targetX - camera.position.x) * 0.05;
-            camera.position.y += (5 - targetY - camera.position.y) * 0.05;
-            camera.lookAt([0, -2, 0]);
+          // Smooth mouse parallax
+          targetX = mouseX * 0.2;
+          targetY = mouseY * 0.2;
+          camera.position.x += (targetX - camera.position.x) * 0.05;
+          camera.position.y += (5 - targetY - camera.position.y) * 0.05;
+          camera.lookAt([0, -2, 0]);
 
-            renderer.render({ scene, camera });
-          }
+          renderer.render({ scene, camera });
         };
 
-        requestAnimationFrame(animate);
+        if (heroSection) {
+          const visibilityObserver = new IntersectionObserver((entries) => {
+            isVisible = entries[0].isIntersecting;
+            if (isVisible && !isAnimating) {
+              requestAnimationFrame(animate);
+            }
+          });
+          visibilityObserver.observe(heroSection);
+        } else {
+          requestAnimationFrame(animate);
+        }
 
         // --- DYNAMIC THEME UPDATES ---
         const observer = new MutationObserver((mutations) => {
