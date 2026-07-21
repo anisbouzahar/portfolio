@@ -232,8 +232,12 @@ C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // Fetch immediately when visible
-          updateStatus();
+          // Fetch when idle to avoid blocking critical render path
+          if ("requestIdleCallback" in window) {
+            requestIdleCallback(() => updateStatus(), { timeout: 2000 });
+          } else {
+            setTimeout(updateStatus, 1500);
+          }
           // Then set interval
           if (!statusInterval) {
             statusInterval = setInterval(updateStatus, 60000);
